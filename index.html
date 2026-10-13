@@ -1040,14 +1040,14 @@ dialog.zoom::backdrop{background:rgba(0,0,0,.88);}
       <h2>Resume</h2>
     </div>
     <div class="resume-actions">
-      <a class="btn" href="assets/Samyukth-Bitra-Resume.pdf" download>Download PDF ↓</a>
-      <a class="btn" href="assets/Samyukth-Bitra-Resume.pdf" target="_blank" rel="noopener">Open in a new tab ↗</a>
+      <a class="btn" href="assets/Samyukth-Bitra-Resume.pdf?v=2" download="Samyukth-Bitra-Resume.pdf">Download PDF ↓</a>
+      <a class="btn" href="assets/Samyukth-Bitra-Resume.pdf?v=2" target="_blank" rel="noopener">Open in a new tab ↗</a>
     </div>
-    <!-- ponytail: page images, not an <object> embed; PDF embeds render blank or page-1-only in many browsers. Re-render with: pdftoppm -r 144 -png Samyukth-Bitra-Resume.pdf resume -->
+    <!-- ponytail: page images, not an <object> embed; PDF embeds render blank or page-1-only in many browsers. Re-render with: pdftoppm -r 144 -png Samyukth-Bitra-Resume.pdf resume, then bump ?v= on the five resume links (GitHub Pages caches files for 10 minutes) -->
     <div class="resume">
-      <img src="assets/resume-1.png" alt="Resume, page 1 of 3" loading="lazy">
-      <img src="assets/resume-2.png" alt="Resume, page 2 of 3" loading="lazy">
-      <img src="assets/resume-3.png" alt="Resume, page 3 of 3" loading="lazy">
+      <img src="assets/resume-1.png?v=2" alt="Resume, page 1 of 3" loading="lazy">
+      <img src="assets/resume-2.png?v=2" alt="Resume, page 2 of 3" loading="lazy">
+      <img src="assets/resume-3.png?v=2" alt="Resume, page 3 of 3" loading="lazy">
     </div>
   </section>
 
