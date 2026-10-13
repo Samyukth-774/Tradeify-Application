@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Samyukth Bitra — Junior Marketer, 247/FX</title>
+<style>
+/* Style, background and scripts come from the Shades of Trades audit (Shades-Of-Trades-Audit-main);
+   the palette is a softened Tradeify green. Research content adapted from "Tradeify vs Lucid Trading". */
+:root{
+  color-scheme: light;
+  --surface-1:rgba(255,255,255,.78); --base:#f4f6f3;
+  --glass:blur(12px) saturate(120%);
+  --ink-1:#0b0b0b; --ink-2:#4f544f; --ink-3:#868c86;
+  --grid:rgba(11,11,11,.10); --axis:rgba(11,11,11,.20); --ring:rgba(11,11,11,0.12);
+  --s1:#2e7d45; --s2:#5a5fb3; --s3:#a77d1c; --crit:#b9573d;
+  --wash:rgba(46,125,69,0.07);
+  --radius:14px;
+  --font:system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --surface-1:rgba(255,255,255,.05); --base:#070908;
+  --ink-1:#f4f6f3; --ink-2:#c1c6bf; --ink-3:#868e88;
+  --grid:rgba(255,255,255,.08); --axis:rgba(255,255,255,.16); --ring:rgba(255,255,255,0.12);
+  --s1:#86c995; --s2:#a3a7ec; --s3:#d6b46a; --crit:#e09078;
+  --wash:rgba(134,201,149,0.09);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth; background:var(--base);}
+body{
+  margin:0; background:transparent; color:var(--ink-1);
+  font-family:var(--font); font-size:16px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--s1);}
+h1,h2,h3,h4{line-height:1.25; margin:0; font-weight:650; letter-spacing:-0.015em;}
+h1{font-size:clamp(28px,4.4vw,44px); letter-spacing:-0.03em;}
+h2{font-size:clamp(21px,2.6vw,28px); letter-spacing:-0.02em;}
+h3{font-size:18px;}
+p{margin:0 0 14px;}
+.wrap{max-width:1080px; margin:0 auto; padding:0 22px;}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky; top:0; z-index:100; background:color-mix(in srgb, var(--base) 96%, transparent);
+  backdrop-filter:blur(20px) saturate(140%); -webkit-backdrop-filter:blur(20px) saturate(140%);
+  border-bottom:1px solid var(--ring); transition:box-shadow .3s;
+}
+.topbar.stuck{ box-shadow:0 10px 30px rgba(0,0,0,.28); }
+:root[data-theme="light"] .topbar.stuck{ box-shadow:0 8px 26px rgba(11,11,11,.10); }
+.topbar-in{display:flex; align-items:center; gap:18px; height:58px;}
+.brand{font-weight:680; font-size:14.5px; letter-spacing:-0.01em; white-space:nowrap;}
+.brand span{color:var(--ink-3); font-weight:500;}
+.navlinks{display:flex; gap:4px; margin-left:auto; overflow-x:auto; scrollbar-width:none;}
+.navlinks::-webkit-scrollbar{display:none;}
+.navlinks a{
+  position:relative; font-size:13px; color:var(--ink-2); text-decoration:none; padding:6px 10px;
+  border-radius:8px; white-space:nowrap; transition:color .2s ease, background .2s ease;
+}
+.navlinks a::after{
+  content:''; position:absolute; left:10px; right:10px; bottom:3px; height:2px; border-radius:2px;
+  background:var(--s1); transform:scaleX(0); transition:transform .28s cubic-bezier(.3,.8,.3,1);
+}
+@media (hover:hover){
+  .navlinks a:hover{ color:var(--ink-1); background:var(--wash); }
+  .navlinks a:hover::after{ transform:scaleX(.55); }
+}
+.navlinks a.active{ color:var(--ink-1); background:var(--wash); font-weight:600; }
+.navlinks a.active::after{ transform:scaleX(1); }
+.iconbtn{
+  border:1px solid var(--ring); background:var(--surface-1); color:var(--ink-2);
+  width:34px; height:34px; border-radius:9px; cursor:pointer; font-size:15px;
+  display:grid; place-items:center; flex:none;
+}
+.iconbtn:hover{color:var(--ink-1); border-color:var(--axis);}
+.topbar .progress{
+  position:absolute; left:0; bottom:-1px; height:2px; width:0%;
+  background:linear-gradient(90deg, var(--s1), var(--s3)); transition:width .12s linear;
+}
+
+/* ---------- full-page Scanner field (vanilla WebGL2 port of React Bits <Scanner />) ---------- */
+.scanner-band{ position:fixed; inset:0; z-index:0; pointer-events:none; }
+.scanner-container{ position:absolute; inset:0; width:100%; height:100%; overflow:hidden; }
+.scanner-container canvas{ display:block; width:100%; height:100%; }
+.scanner-scrim{
+  position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(120% 70% at 50% 0%, rgba(7,9,8,.40) 0%, rgba(7,9,8,.72) 55%, rgba(7,9,8,.84) 100%);
+}
+:root[data-theme="light"] .scanner-scrim{
+  background:radial-gradient(120% 70% at 50% 0%, rgba(244,246,243,.66) 0%, rgba(244,246,243,.82) 55%, rgba(244,246,243,.88) 100%);
+}
+.herowrap, .wrap, footer{ position:relative; z-index:1; }
+
+/* ---------- hero ---------- */
+.hero{padding:64px 0 8px;}
+.eyebrow{
+  font-size:12px; letter-spacing:.10em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:620; margin-bottom:14px;
+}
+.lede{font-size:18.5px; color:var(--ink-2); max-width:66ch; margin-top:16px;}
+.lede strong{color:var(--ink-1);}
+.meta{display:flex; flex-wrap:wrap; gap:8px; margin-top:20px;}
+.chip{
+  font-size:12.5px; padding:4px 11px; border-radius:999px;
+  border:1px solid var(--ring); color:var(--ink-2); background:var(--surface-1);
+  backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass);
+}
+.chip.verified{color:var(--s1); border-color:color-mix(in srgb,var(--s1) 35%,transparent);}
+
+/* ---------- callout ---------- */
+.callout{
+  backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass);
+  background:var(--surface-1); border:1px solid var(--ring); border-left:3px solid var(--s3);
+  border-radius:var(--radius); padding:18px 20px; margin:22px 0 0; font-size:14.5px; color:var(--ink-2);
+}
+.callout strong{color:var(--ink-1);}
+.callout .ct{font-size:13px; font-weight:650; color:var(--ink-1); margin-bottom:6px;}
+.callout.good{border-left-color:var(--s1);}
+
+/* ---------- sections ---------- */
+section{padding:60px 0 22px; margin-top:28px; scroll-margin-top:66px; position:relative;}
+/* section divider: a full-width rule with a short accent segment where the section number starts */
+section::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:1px; background:var(--axis);
+}
+section::after{
+  content:''; position:absolute; top:-1px; left:0; width:72px; height:3px; border-radius:2px; background:var(--s1);
+}
+/* lighter rule between the research parts (2.1 summary, 2.2 changes, 2.3 full research) */
+#research > .sub{padding-top:30px; border-top:1px dashed var(--axis);}
+.sec-head{margin-bottom:26px;}
+.sec-head .num{
+  position:relative; font-size:12px; font-weight:680; color:var(--ink-3); letter-spacing:.08em; display:block; margin-bottom:8px;
+}
+.sec-head .num::before{
+  content:''; position:absolute; left:-14px; top:50%; width:6px; height:6px; margin-top:-3px;
+  border-radius:50%; background:var(--s1); opacity:.55;
+}
+.sec-head p{color:var(--ink-2); max-width:64ch; margin-top:10px; font-size:15px;}
+.sub{margin:44px 0 14px;}
+.sub .k{font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); font-weight:650; display:block; margin-bottom:6px;}
+.sub p{color:var(--ink-2); max-width:66ch; margin:8px 0 0; font-size:14.5px;}
+
+/* ---------- stat tiles ---------- */
+.tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(178px,1fr)); gap:12px;}
+.tile{
+  backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass);
+  background:var(--surface-1); border:1px solid var(--ring); border-radius:var(--radius);
+  padding:17px 18px;
+}
+.tile .k{font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-3); font-weight:620;}
+.tile .v{font-size:31px; font-weight:660; letter-spacing:-0.03em; margin:7px 0 3px; line-height:1;}
+.tile .v.ok{color:var(--s1);}
+.tile .d{font-size:12.5px; color:var(--ink-2);}
+
+/* ---------- cards ---------- */
+.card{
+  backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass);
+  background:var(--surface-1); border:1px solid var(--ring); border-radius:var(--radius);
+  padding:22px; min-width:0;
+}
+.card-title{font-size:16px; font-weight:640;}
+.card-sub{font-size:13px; color:var(--ink-2); margin-top:3px; max-width:64ch;}
+.two{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:12px;}
+.card h4{font-size:12px; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-3); margin:0 0 12px;}
+ul.tight{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:12px; color:var(--ink-2); font-size:14.5px;}
+ul.tight li{display:grid; grid-template-columns:16px 1fr; gap:8px;}
+ul.tight li::before{content:'◆'; color:var(--s1); font-size:10px; margin-top:6px;}
+ul.tight.x li::before{content:'✕'; color:var(--crit); font-size:12px; margin-top:3px;}
+ul.tight.plain li::before{content:'·'; color:var(--ink-3); font-size:18px; margin-top:-3px;}
+ul.tight b{color:var(--ink-1); font-weight:620; display:block;}
+
+/* ---------- the work row ---------- */
+.works{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; align-items:stretch;}
+.work{display:flex; flex-direction:column;}
+.slot{
+  position:relative; border:1px dashed var(--axis); border-radius:10px; overflow:hidden;
+  display:grid; place-items:center; text-align:center; color:var(--ink-3); font-size:12.5px;
+  height:440px; margin:14px 0 12px; background:color-mix(in srgb,var(--base) 55%,transparent);
+}
+.slot>img,.slot>video{position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:var(--base);}
+.slot:has(img,video){border-style:solid; border-color:var(--ring);}
+.preview{
+  height:440px; margin:14px 0 12px; border-radius:10px; border:1px solid var(--ring); padding:18px;
+  background:color-mix(in srgb,var(--base) 55%,transparent); display:flex; flex-direction:column; gap:14px;
+}
+.preview .hl{font-size:19px; font-weight:650; letter-spacing:-0.02em; line-height:1.3;}
+.preview .hl span{color:var(--ink-3);}
+.mini{display:grid; grid-template-columns:1fr auto auto; gap:6px 14px; font-size:12.5px; color:var(--ink-2); font-variant-numeric:tabular-nums;}
+.mini .h{font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); font-weight:650;}
+.mini .t{color:var(--s1); font-weight:600; text-align:right;} .mini .l{color:var(--s2); font-weight:600; text-align:right;}
+.preview ul{margin:0; padding-left:16px; font-size:13px; color:var(--ink-2); display:flex; flex-direction:column; gap:6px;}
+.btn{
+  display:inline-flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; text-decoration:none;
+  padding:9px 14px; border-radius:10px; border:1px solid color-mix(in srgb,var(--s1) 45%,transparent);
+  color:var(--s1); background:var(--wash); margin-top:auto; align-self:flex-start;
+}
+.btn:hover{background:color-mix(in srgb,var(--s1) 16%,transparent);}
+
+/* ---------- tables ---------- */
+.tblwrap{
+  backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass);
+  background:var(--surface-1); border:1px solid var(--ring); border-radius:var(--radius); overflow-x:auto;
+}
+table{width:100%; border-collapse:collapse; font-size:14px;}
+th,td{text-align:left; padding:11px 16px; border-bottom:1px solid var(--grid); vertical-align:top;}
+th{
+  font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3);
+  font-weight:640; background:color-mix(in srgb,var(--base) 42%, transparent);
+}
+tr:last-child td{border-bottom:none;}
+td.n{font-variant-numeric:tabular-nums; white-space:nowrap;}
+td:first-child{color:var(--ink-1);}
+td{color:var(--ink-2);}
+th.t{color:var(--s1);} th.l{color:var(--s2);}
+td.win{color:var(--ink-1); font-weight:600;}
+td.win::after{content:" ●"; color:var(--s1); font-size:10px; vertical-align:middle;}
+tr.hi td{background:color-mix(in srgb,var(--s1) 8%,transparent);}
+tr.lo td{background:color-mix(in srgb,var(--crit) 7%,transparent);}
+table.wide{min-width:720px;}
+
+/* ---------- bars ---------- */
+.bars{display:flex; flex-direction:column; gap:7px; margin-top:16px;}
+.brow{display:grid; grid-template-columns:minmax(120px,290px) 1fr; gap:14px; align-items:center;}
+.blab{font-size:13px; color:var(--ink-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.btrack{height:22px; display:flex; align-items:center; gap:9px;}
+.bfill{height:16px; border-radius:0 4px 4px 0; transition:width .55s cubic-bezier(.2,.7,.3,1); min-width:2px;}
+.bval{font-size:12.5px; font-variant-numeric:tabular-nums; color:var(--ink-2); white-space:nowrap;}
+.axisline{height:1px; background:var(--axis); margin:12px 0 6px;}
+.ticks{display:flex; justify-content:space-between; font-size:11.5px; color:var(--ink-3); font-variant-numeric:tabular-nums;}
+.tg{display:inline-block; font-size:10px; font-weight:700; line-height:1; padding:3px 4px; border-radius:3px; margin-right:7px; vertical-align:1px;}
+.tg.t{color:var(--s1); background:color-mix(in srgb,var(--s1) 15%,transparent);}
+.tg.l{color:var(--s2); background:color-mix(in srgb,var(--s2) 16%,transparent);}
+.f-t{background:var(--s1);} .f-l{background:var(--s2);}
+
+/* ---------- ranked actions (native <details>) ---------- */
+.acc{display:flex; flex-direction:column; gap:10px;}
+details.item{
+  backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass);
+  background:var(--surface-1); border:1px solid var(--ring); border-radius:var(--radius); overflow:hidden;
+}
+details.item[open]{border-color:color-mix(in srgb,var(--s1) 30%,var(--ring));}
+details.item summary{display:flex; gap:14px; align-items:center; padding:15px 18px; cursor:pointer; list-style:none;}
+details.item summary::-webkit-details-marker{display:none;}
+details.item summary:hover{background:var(--wash);}
+.rank{
+  flex:none; width:26px; height:26px; border-radius:8px; display:grid; place-items:center;
+  font-size:12.5px; font-weight:680; background:var(--wash); color:var(--s1);
+}
+details.item[open] .rank{background:var(--s1); color:var(--base);}
+.ititle{font-size:15px; font-weight:620; flex:1;}
+.sev{font-size:11px; font-weight:660; letter-spacing:.04em; text-transform:uppercase; padding:3px 9px; border-radius:999px; white-space:nowrap; flex:none;}
+.sev.now{color:var(--s3); background:color-mix(in srgb,var(--s3) 14%,transparent);}
+.sev.high{color:var(--s1); background:color-mix(in srgb,var(--s1) 13%,transparent);}
+.sev.med{color:var(--ink-2); background:color-mix(in srgb,var(--ink-3) 15%,transparent);}
+.caret{flex:none; color:var(--ink-3); font-size:12px; transition:transform .22s;}
+details.item[open] .caret{transform:rotate(90deg);}
+.ibody{padding:0 18px 18px 58px; font-size:14.5px; color:var(--ink-2);}
+.ibody ul{margin:8px 0 0; padding-left:18px;}
+.fix{
+  border-left:2px solid var(--s1); background:color-mix(in srgb,var(--s1) 6%,transparent);
+  padding:11px 14px; border-radius:0 9px 9px 0; margin-top:10px; color:var(--ink-1); font-size:14px;
+}
+details.raw{margin-top:12px;}
+details.raw > summary{
+  cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center;
+  font-size:14px; font-weight:620; padding:14px 18px; border:1px solid var(--ring); border-radius:var(--radius);
+  background:var(--surface-1); backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass);
+}
+details.raw > summary::-webkit-details-marker{display:none;}
+details.raw > summary::after{content:"Show ▾"; font-size:12px; font-weight:500; color:var(--ink-3);}
+details.raw[open] > summary::after{content:"Hide ▴";}
+details.raw.tbl[open] > summary{border-radius:var(--radius) var(--radius) 0 0;}
+details.raw.tbl > .tblwrap{border-radius:0 0 var(--radius) var(--radius); border-top:none;}
+
+.fair{font-size:14px; color:var(--ink-2); max-width:72ch; margin-top:16px; border-left:2px solid var(--axis); padding-left:14px;}
+.fair b{display:block; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); margin-bottom:4px;}
+
+/* ---------- checklist ---------- */
+.checks{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:10px;}
+.check{
+  backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass);
+  background:var(--surface-1); border:1px solid var(--ring); border-radius:11px; padding:16px 18px;
+  font-size:14.5px; color:var(--ink-2); display:flex; gap:12px; align-items:flex-start;
+}
+.check b{color:var(--ink-1); font-weight:640; display:block; font-size:15px; margin-bottom:3px;}
+.check .bx{color:var(--s1); flex:none; font-size:13px; margin-top:3px;}
+
+/* ---------- kicker ---------- */
+.kicker{
+  backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass);
+  background:var(--surface-1); border:1px solid var(--ring); border-radius:var(--radius);
+  padding:28px 32px; margin-top:16px;
+}
+.kicker p{font-size:19px; color:var(--ink-1); line-height:1.5; margin:0; letter-spacing:-0.01em;}
+.kicker p + p{margin-top:12px; font-size:15px; color:var(--ink-2);}
+.kicker ol{margin:14px 0 0; padding-left:20px; color:var(--ink-2); font-size:15px; display:flex; flex-direction:column; gap:8px;}
+.kicker ol b{color:var(--ink-1);}
+
+/* ---------- resume ---------- */
+.resume{display:flex; flex-direction:column; gap:12px; max-width:860px;}
+.resume img{width:100%; height:auto; display:block; border-radius:10px; border:1px solid var(--ring); background:#fff;}
+.kicker .close{margin-top:16px; font-size:15px; color:var(--ink-1); font-weight:600;}
+.resume-actions{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;}
+
+footer{margin-top:60px; padding:34px 0 60px; font-size:13px; color:var(--ink-3);}
+footer::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, color-mix(in srgb, var(--ink-3) 34%, transparent) 20%,
+    color-mix(in srgb, var(--ink-3) 34%, transparent) 80%, transparent);
+}
+footer a{color:var(--ink-2);}
+
+/* tablet: design + reel side by side, research card full width under them; two-row top bar */
+@media (max-width:900px){
+  .works{grid-template-columns:1fr 1fr;}
+  .works .work:last-child{grid-column:1 / -1;}
+  .preview{height:auto;}
+  .topbar-in{flex-wrap:wrap; height:auto; gap:4px 12px; padding-top:9px; padding-bottom:4px;}
+  .brand{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis;}
+  .navlinks{order:3; width:100%; margin-left:0; padding-bottom:4px;}
+  .navlinks a{padding:7px 10px;}
+  section{scroll-margin-top:104px;}
+}
+/* phone: one column, media sized to the screen */
+@media (max-width:640px){
+  .works{grid-template-columns:1fr;}
+  .works .work:last-child{grid-column:auto;}
+  .slot{height:auto; aspect-ratio:4/5; max-height:72vh; width:100%; max-width:calc(72vh * 4 / 5); margin-left:auto; margin-right:auto;}
+  .slot.r916{aspect-ratio:9/16; max-height:78vh; max-width:calc(78vh * 9 / 16);}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px;}
+  .brow{grid-template-columns:1fr; gap:2px;}
+  .hero{padding:38px 0 6px;}
+  /* phone top bar: just the name, and the section links swipe sideways with a fade hinting at more */
+  .brand span{display:none;}
+  .navlinks{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent); mask-image:linear-gradient(90deg,#000 88%,transparent);}
+  .kicker{padding:22px 20px;}
+  .ibody{padding-left:18px;}
+  /* suggestion rows: let the priority pill sit under the title instead of squeezing it */
+  details.item summary{flex-wrap:wrap; gap:10px 12px; padding:14px 16px;}
+  details.item summary .ititle{flex:1 1 calc(100% - 80px);}
+  details.item summary .sev{order:4; margin-left:38px;}
+  .preview .hl{font-size:17px;}
+  footer{line-height:1.9;}
+}
+@media (prefers-reduced-motion:reduce){
+  .bfill,.navlinks a::after,.caret{transition:none!important;}
+}
+@media print{
+  .topbar,.scanner-band{display:none!important;}
+  html{background:#fff;} body{color:#000;}
+  .card,.tile,.check,.kicker,.callout,.tblwrap,details{background:#fff!important; backdrop-filter:none!important;}
+}
+
+/* ---------- skim layer: highlights, findings, one-line suggestions ---------- */
+.glance{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:26px;}
+.g{display:block; text-decoration:none; color:inherit; padding:14px 16px; border-radius:12px; border:1px solid var(--ring);
+  background:var(--surface-1); backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass); transition:border-color .2s;}
+.g:hover{border-color:color-mix(in srgb,var(--s1) 45%,var(--ring));}
+.gv{display:block; font-size:28px; font-weight:660; letter-spacing:-0.03em; line-height:1.1; color:var(--s1);}
+.gl{display:block; font-size:12.5px; color:var(--ink-2); margin-top:4px; line-height:1.4;}
+.finds{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:10px; margin-top:12px;}
+.find{padding:14px 16px; border-radius:11px; border:1px solid var(--ring); border-left:3px solid var(--s1);
+  background:var(--surface-1); backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass); font-size:14px; color:var(--ink-2);}
+.find b{display:block; color:var(--ink-1); font-weight:640; font-size:14.5px; margin-bottom:2px;}
+.ititle small{display:block; font-size:13px; font-weight:450; color:var(--ink-2); margin-top:2px; letter-spacing:0;}
+.toolbtn{font:inherit; font-size:12.5px; padding:5px 11px; border-radius:8px; cursor:pointer; border:1px solid var(--ring); background:transparent; color:var(--ink-2);}
+.toolbtn:hover{background:var(--wash); color:var(--ink-1);}
+.grp-row{display:flex; align-items:center; justify-content:space-between; gap:12px; margin:22px 0 10px;}
+.grp-row h3.grp{margin:0;}
+@media (max-width:760px){ .glance{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:640px){ .tiles{grid-template-columns:repeat(2,1fr);} .tile{padding:14px;} .tile .v{font-size:24px;} .tile .v .vs-l{display:block; font-size:13px; margin-top:4px;} }
+
+/* ---------- research summary + groups ---------- */
+.tile .v .vs-l{font-size:15px; font-weight:560; color:var(--s2); letter-spacing:0;}
+h3.grp{font-size:14px; font-weight:650; color:var(--ink-2); margin:22px 0 10px; letter-spacing:0;}
+details.full > summary{color:var(--s1); border-color:color-mix(in srgb,var(--s1) 35%,var(--ring));}
+details.full .rawbody{padding-top:4px;}
+details.full .rawbody > .sub:first-child{margin-top:22px;}
+
+/* ---------- zoomable design (native <dialog>) ---------- */
+.slot.zoomable img{cursor:zoom-in;}
+dialog.zoom{padding:0; border:none; background:transparent; width:100vw; height:100vh; max-width:none; max-height:none;}
+dialog.zoom::backdrop{background:rgba(0,0,0,.88);}
+.zoom-inner{width:100%; height:100%; overflow:auto; display:grid; place-items:center;}
+.zoom-inner img{max-width:94vw; max-height:94vh; cursor:zoom-in; display:block;}
+.zoom-inner.full{display:block;}
+.zoom-inner.full img{max-width:none; max-height:none; margin:0 auto; cursor:zoom-out;}
+.zoom-close{
+  position:fixed; top:14px; right:14px; z-index:2; width:40px; height:40px; border-radius:10px; cursor:pointer;
+  border:1px solid rgba(255,255,255,.25); background:rgba(0,0,0,.55); color:#fff; font-size:16px;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-in">
+    <div class="brand">Samyukth Bitra <span>· for the 247/FX team at Tradeify</span></div>
+    <nav class="navlinks">
+      <a href="#work">My work</a>
+      <a href="#research">Research</a>
+      <a href="#me">Who I am</a>
+      <a href="#why">Why Tradeify</a>
+      <a href="#industry">The industry</a>
+      <a href="#role">The role</a>
+      <a href="#resume">Resume</a>
+    </nav>
+    <button class="iconbtn" id="themeBtn" aria-label="Toggle dark mode" title="Toggle theme">◐</button>
+  </div>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+</div>
+
+<div class="scanner-band" aria-hidden="true">
+  <div class="scanner-container" id="scanner"></div>
+  <div class="scanner-scrim"></div>
+</div>
+
+<div class="herowrap">
+  <div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Application · Junior Marketer · 247/FX</div>
+    <h1>Hi Tradeify team.</h1>
+    <p class="lede">I'm Samyukth Bitra. I work in social media, content and community marketing, and I have been trading with prop firms since May 2024. I have represented a prop firm to its community as a moderator and an event speaker, and I have worked as a content strategist for a trading education account with 517K followers. I edit videos in DaVinci Resolve and Final Cut Pro, and I design in Canva.</p>
+    <p class="lede" style="margin-top:0">This page starts with my work, followed by my research on Tradeify's Instagram and more about me. My resume is at the end.</p>
+    <div class="meta">
+      <span class="chip verified">Trading prop firms since May 2024</span>
+      <span class="chip">DaVinci Resolve · Final Cut Pro · Canva</span>
+      <span class="chip">Available immediately · remote</span>
+      <span class="chip">samyukthbitra@gmail.com</span>
+    </div>
+    <div class="glance">
+      <a class="g" href="#me"><span class="gv">+80%</span><span class="gl">average views per reel on a 517K-follower account</span></a>
+      <a class="g" href="#research"><span class="gv">81</span><span class="gl">Reels studied across Tradeify and Lucid</span></a>
+      <a class="g" href="#research"><span class="gv">12</span><span class="gl">suggested changes for Tradeify, 247 and FX</span></a>
+      <a class="g" href="#work"><span class="gv">3</span><span class="gl">work samples: design, reel and research</span></a>
+    </div>
+  </header>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ============ 01 MY WORK ============ -->
+  <section id="work">
+    <div class="sec-head">
+      <span class="num">01 · MY WORK</span>
+      <h2>I can design, edit video and do research proficiently</h2>
+      <p>One sample of each: a design, an edited reel, and competitor research.</p>
+    </div>
+
+    <div class="works">
+      <div class="card work">
+        <div class="card-title">Canva design</div>
+        <div class="card-sub">Click the design to enlarge it</div>
+        <div class="slot zoomable" data-media="assets/canva.webp">Design not found at<br>assets/canva.webp</div>
+        <div class="card-sub">A promotional post for the 2X Gems offer, made in Canva in Tradeify's colours and style.</div>
+      </div>
+      <div class="card work">
+        <div class="card-title">Edited reel</div>
+        <div class="card-sub">"Ranking your Trading Personality"</div>
+        <div class="slot r916" data-media="assets/reel.mp4" data-poster="assets/reel-poster.jpg">Reel not found at<br>assets/reel.mp4</div>
+        <div class="card-sub">A tier-list reel for The Shades of Trades, scripted and edited in DaVinci Resolve.</div>
+      </div>
+      <div class="card work">
+        <div class="card-title">Competitor research</div>
+        <div class="card-sub">Tradeify vs Lucid Trading on Instagram</div>
+        <div class="preview">
+          <div class="hl">Tradeify gets more total reach. <span>Lucid gets more plays per post.</span></div>
+          <div class="mini">
+            <span class="h">9 Sep – 9 Oct</span><span class="h" style="text-align:right">Tradeify</span><span class="h" style="text-align:right">Lucid</span>
+            <span>Reels posted</span><span class="t">51</span><span class="l">15</span>
+            <span>Total plays</span><span class="t">1.87M</span><span class="l">725k</span>
+            <span>Median plays per Reel</span><span class="t">23k</span><span class="l">36.9k</span>
+          </div>
+          <ul>
+            <li>Seven Tradeify captions say "link in bio", but the bio only links to Threads.</li>
+            <li>Lucid's pack launch got 163k plays. Tradeify's best Rewards Center post got 26.1k.</li>
+            <li>Includes suggested changes for the main page, 247 and FX, and a creator map.</li>
+          </ul>
+          <a class="btn" href="#research">See the research ↓</a>
+        </div>
+        <div class="card-sub">81 Reels from two firms and every post on @tradeify.fx, compiled 12–13 October 2026.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 02 RESEARCH ============ -->
+  <section id="research">
+    <div class="sec-head">
+      <span class="num">02 · RESEARCH</span>
+      <h2>Comprehensive competitor research and comparison</h2>
+      <p>81 Reels from Tradeify and Lucid, and every post on @tradeify.fx. Summary first, then suggested changes, then the full research.</p>
+    </div>
+    <div class="meta" style="margin-top:-8px">
+      <span class="chip verified">Tradeify · 51 Reels · 9 Sep to 9 Oct</span>
+      <span class="chip" style="color:var(--s2)">Lucid · 30 Reels · 27 Jul to 12 Oct</span>
+      <span class="chip">Same-window comparison: 51 vs 15</span>
+    </div>
+    <div class="callout">
+      <div class="ct">Read this with a pinch of salt</div>
+      Play counts are what Instagram shows on the grid, so a collab counts both audiences. Saves, shares, watch time, reach split and link taps are invisible from outside. Lucid posts far less often, so its sample runs back to July to get 30 Reels; wherever the two are compared directly, I use the shared 9 September to 9 October window.
+    </div>
+
+    <!-- 2.1 summary -->
+    <div class="sub"><span class="k">2.1</span><h3>Summary</h3><p>Tradeify and Lucid are futures prop firms of a similar size. In the same month they ran similar campaigns, but they promote them in different ways.</p></div>
+    <div class="tiles">
+      <div class="tile"><div class="k">Reels posted</div><div class="v">51 <span class="vs-l">vs 15</span></div><div class="d">Tradeify vs Lucid, 9 Sep – 9 Oct</div></div>
+      <div class="tile"><div class="k">Total plays</div><div class="v">1.87M <span class="vs-l">vs 725k</span></div><div class="d">Tradeify reaches more people in total</div></div>
+      <div class="tile"><div class="k">Median plays per Reel</div><div class="v">23k <span class="vs-l">vs 36.9k</span></div><div class="d">Lucid gets more plays per post</div></div>
+      <div class="tile"><div class="k">Followers</div><div class="v">93.1k <span class="vs-l">vs 81.9k</span></div><div class="d">@tradeify.fx has 2,845</div></div>
+    </div>
+    <div class="finds">
+      <div class="find"><b>Creators drive Tradeify's reach</b>"W or L trade" Reels: 29.4k median plays, against 23k for the page.</div>
+      <div class="find"><b>Lucid builds up to launches</b>Prop Pass, 7 posts: 380k plays. Rewards Center, 4 posts: 96k.</div>
+      <div class="find"><b>The bio has no campaign link</b>7 captions say "link in bio"; the bio links only to Threads (about 150k plays).</div>
+      <div class="find"><b>Lucid repeats one code and date</b>"40% off, code VAULT" with the same end date in every post.</div>
+      <div class="find"><b>On @tradeify.fx, proof beats discounts</b>Payout certificate: 582 likes. Discount-only posts: 55 and 46.</div>
+      <div class="find"><b>Where Tradeify leads</b>Trade content, regular creators, athlete partnerships, and more than 3× Lucid's output.</div>
+    </div>
+
+    <!-- 2.2 suggested changes -->
+    <div class="sub"><span class="k">2.2</span><h3>Suggested changes</h3><p>12 changes, ranked by impact against effort. Each line shows the suggestion; open it for the data behind it. None of them changes what already works, such as the trade clips and the creator network.</p></div>
+    <div class="grp-row"><h3 class="grp">For the main Tradeify page</h3><button class="toolbtn" id="expandAll" type="button">Expand all</button></div>
+    <div class="acc">
+      <details class="item">
+        <summary><span class="rank">1</span><span class="ititle">A link in the bio<small>One landing page in the bio for the current campaign.</small></span><span class="sev now">Quick fix</span><span class="caret">▶</span></summary>
+        <div class="ibody">The bio currently links only to Threads, and seven captions point viewers to the bio. Lucid's bio has links to its website, store, YouTube and Facebook.
+          <div class="fix"><b>Suggestion:</b> one landing page in the bio with the current campaign at the top, followed by the evaluation page, PTL and 247/FX. It would be updated whenever a campaign changes.</div></div>
+      </details>
+      <details class="item">
+        <summary><span class="rank">2</span><span class="ititle">Posts leading up to each launch<small>A four-post sequence: teaser, hint, launch, then a creator using it.</small></span><span class="sev high">High</span><span class="caret">▶</span></summary>
+        <div class="ibody">Lucid's Prop Pass was teased before launch and got 380k plays across seven posts. Tradeify's Rewards Center got 96k across four. Lucid's second teaser alone (55.2k) got more plays than any Rewards Center post. On @tradeify.fx, the waitlist Reel posted before launch is still the best-performing post.
+          <div class="fix"><b>Suggestion:</b> a four-post sequence for each launch: a teaser three days before, a closer hint the day before, the launch post, and a creator using the product two days after.</div></div>
+      </details>
+      <details class="item">
+        <summary><span class="rank">3</span><span class="ititle">One code and one end date on every channel<small>A shared offer sheet that social, email, paid and affiliates all use.</small></span><span class="sev high">High</span><span class="caret">▶</span></summary>
+        <div class="ibody">Lucid's VAULT code appeared with its end date on screen in every post, so every channel showed the same offer.
+          <div class="fix"><b>Suggestion:</b> a shared offer sheet listing the code, discount, start and end date, and approved creative for each live offer. Social, email, paid and affiliates would all use it as their reference.</div></div>
+      </details>
+      <details class="item">
+        <summary><span class="rank">4</span><span class="ititle">Showing what is inside the packs<small>Reels of creators opening packs and showing what they won.</small></span><span class="sev high">High</span><span class="caret">▶</span></summary>
+        <div class="ibody">The Rewards Center captions explain how to earn packs: missions, Gems, packs. The cover art shows the prizes (a 150K account, a Rolex), but no Reel shows someone opening a pack and getting one.
+          <div class="fix"><b>Suggestion:</b> Reels of creators opening packs and reacting to what they get, a weekly "best pull" Reel from traders' own screen recordings, and a running count of how many 150K accounts have been won.</div></div>
+      </details>
+      <details class="item">
+        <summary><span class="rank">5</span><span class="ititle">A consistent voice for launch posts<small>One launch post written in Tradeify's own humorous tone, as a test.</small></span><span class="sev med">Worth testing</span><span class="caret">▶</span></summary>
+        <div class="ibody">Lucid writes its product posts as jokes, and they get more plays than its median. Tradeify already uses humour in its memes ("This is not financial advice. This is peer pressure." got 24.9k), but not in its launch posts.
+          <div class="fix"><b>Suggestion:</b> write one launch post in Tradeify's own humorous tone and compare its results with a standard announcement.</div></div>
+      </details>
+    </div>
+
+    <h3 class="grp">For Tradeify 247 and Tradeify FX</h3>
+    <div class="acc">
+      <details class="item">
+        <summary><span class="rank">1</span><span class="ititle">Using the main page's audience<small>247 and FX launches posted as collabs with @tradeifyfunding.</small></span><span class="sev now">Highest</span><span class="caret">▶</span></summary>
+        <div class="ibody">@tradeify.fx has 2,845 followers and @tradeifyfunding has 93.1k. Across the 51 main-page Reels, FX's launch week had no Reel, and 247 had one (23 September, 16.2k plays).
+          <div class="fix"><b>Suggestion:</b> post 247 and FX launches as Instagram collab posts with @tradeifyfunding, so one Reel appears on both pages. The main page already does this with its creators.</div></div>
+      </details>
+      <details class="item">
+        <summary><span class="rank">2</span><span class="ititle">Proof on the grid, discounts in Stories<small>Payouts and traders on the grid; codes and countdowns in Stories.</small></span><span class="sev high">High</span><span class="caret">▶</span></summary>
+        <div class="ibody">On @tradeify.fx, the payout certificate got 582 likes and the waitlist Reel 684. The two discount-only graphics got 55 and 46, the lowest on the page. Traders comparing firms want to see that a firm pays, and the Trustpilot reviews reflect the same.
+          <div class="fix"><b>Suggestion:</b> use the grid and Reels for payouts, traders and the FX Open, and use Stories and the link page for codes and countdowns.</div></div>
+      </details>
+      <details class="item">
+        <summary><span class="rank">3</span><span class="ititle">A series based on 247's trading hours<small>A weekly "weekend desk" series for 247, and a session-open series for FX.</small></span><span class="sev high">High</span><span class="caret">▶</span></summary>
+        <div class="ibody">The main difference between 247 and futures is time: futures traders stop on Friday, 247 traders can keep trading over the weekend.
+          <div class="fix"><b>Suggestion:</b> a weekly "weekend desk" series showing 247 traders trading BTC or tokenized stocks on a Saturday, in the same format each week. For FX, a series built around the Tokyo, London and New York session opens, filmed by creators in those time zones.</div></div>
+      </details>
+      <details class="item">
+        <summary><span class="rank">4</span><span class="ititle">The "W or L" format for crypto, gold and forex<small>The main page's best format, recorded on MT5 and DXTrade.</small></span><span class="sev high">High</span><span class="caret">▶</span></summary>
+        <div class="ibody">The main page's best repeatable format (29.4k median) is not used on @tradeify.fx, which has two Reels in total. It needs only a screen recording and a person on camera.
+          <div class="fix"><b>Suggestion:</b> the same format recorded on MT5 and DXTrade, so viewers see the platform they would trade on. For FX, creators whose audiences are outside the US, since FX is not sold in the US.</div></div>
+      </details>
+      <details class="item">
+        <summary><span class="rank">5</span><span class="ititle">Daily coverage of the FX Open<small>A daily leaderboard Reel featuring one trader's story.</small></span><span class="sev med">Medium</span><span class="caret">▶</span></summary>
+        <div class="ibody">Registration closed on 11 October. Lucid's competition posts got 42.6k and 47.1k plays on days one and two, with each day showing a leader and a result.
+          <div class="fix"><b>Suggestion:</b> a daily leaderboard Reel featuring one trader's story, and a winners' post presented as a payout rather than a list.</div></div>
+      </details>
+      <details class="item">
+        <summary><span class="rank">6</span><span class="ititle">Handles, links and the pricing page<small>One reference sheet for handles, links and live codes.</small></span><span class="sev now">Quick fix</span><span class="caret">▶</span></summary>
+        <div class="ibody">These are the inconsistencies I found while researching:
+          <ul>
+            <li>The 247 site's footer links Instagram to @tradeify247, which does not exist; its header links to @tradeify.fx.</li>
+            <li>On the same footer, the X icon opens Discord and the TikTok icon opens X.</li>
+            <li>X is split across @tradeify247 and @tradeifyforex, while YouTube is one @TradeifyFXOfficial channel.</li>
+            <li>The FX pricing section shows placeholder text ("Lorem ipsum", "Save $X with code DASH") next to the live OCT code.</li>
+          </ul>
+          <div class="fix"><b>Suggestion:</b> one sheet of handles, links and live codes that every channel is checked against.</div></div>
+      </details>
+      <details class="item">
+        <summary><span class="rank">7</span><span class="ititle">Rewards on 247 or FX, if they launch<small>Packs opened on camera, showing what was won.</small></span><span class="sev med">Later</span><span class="caret">▶</span></summary>
+        <div class="ibody">Crypto traders already understand rarity, drops and collections, so the pack lesson from Lucid applies here too.
+          <div class="fix"><b>Suggestion:</b> show packs being opened on camera, with what was won: a funded account, a discount or a rare item.</div></div>
+      </details>
+    </div>
+
+    <!-- 2.3 full research -->
+    <div class="sub"><span class="k">2.3</span><h3>Full research</h3><p>The complete comparison behind the summary and suggestions: both pages, the two launches and two competitions side by side, the 247 and FX products, the creator map, and every Reel.</p></div>
+    <details class="raw full">
+      <summary>Show the full research</summary>
+      <div class="rawbody">
+
+        <div class="sub"><span class="k">A</span><h3>Snapshot</h3></div>
+        <div class="tblwrap"><table class="vs">
+      <thead><tr><th>Same window, 9 Sep to 9 Oct</th><th class="t">Tradeify</th><th class="l">Lucid</th></tr></thead>
+      <tbody>
+        <tr><td>Followers</td><td class="n">93.1k</td><td class="n">81.9k</td></tr>
+        <tr><td>Reels posted</td><td class="n win">51</td><td class="n">15</td></tr>
+        <tr><td>Total plays</td><td class="n win">1.87M</td><td class="n">725k</td></tr>
+        <tr><td>Median plays per Reel</td><td class="n">23k</td><td class="n win">36.9k</td></tr>
+        <tr><td>Median plays as % of followers</td><td class="n">25%</td><td class="n win">45%</td></tr>
+        <tr><td>Who's on camera</td><td>Trader-creators on the team, plus athlete partners</td><td>Lucid's own staff as recurring characters</td></tr>
+        <tr><td>Voice</td><td>Trader point of view: wins, losses, strategy</td><td>Deadpan jokes at the company's own expense</td></tr>
+        <tr><td>Bio links</td><td>Threads only</td><td class="win">Website, merch store, YouTube, Facebook</td></tr>
+        <tr><td>Story highlights</td><td>None</td><td>None</td></tr>
+      </tbody>
+    </table></div>
+
+        <div class="sub"><span class="k">B</span><h3>Tradeify's main page</h3></div>
+        <div class="two">
+          <div class="card">
+            <h4>What works</h4>
+            <ul class="tight">
+              <li><div><b>Creators share to Tradeify's page</b>@amas.pft, @_claudiarea, @ZaeemTrades and others post from their own profiles and share to Tradeify's. Each trade clip reaches both audiences, which is how 51 Reels added up to 1.87M plays in a month.</div></li>
+              <li><div><b>The "W or L trade" format</b>Ten Reels with the same caption, a median of 29.4k plays, and highs of 59.4k and 58.5k. Each is a screen recording, a person and a result. They are cheap to make and get more plays than most produced content on the page.</div></li>
+              <li><div><b>Strategy breakdowns by the same creators</b>"My EXACT trading strategy explained" got 65.4k and the iFVG breakdown 32.7k.</div></li>
+              <li><div><b>Athlete partnerships</b>Adesanya (252k), Littler (200k) and Head (140k) in one month. Lucid has nothing similar.</div></li>
+              <li><div><b>A series with a following</b>DoorDash to Payout with @ZaeemTrades got 119, 166 and 172 comments on 12k to 19k plays, about ten times the page's usual comment rate.</div></li>
+              <li><div><b>Posting volume</b>About 1.6 Reels a day, with consistent quality.</div></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>What could be improved</h4>
+            <ul class="tight x">
+              <li><div><b>"Link in bio" with no link</b>The PTL sign-up, Profit Wars and FUNDED posts point to the bio, which only links to Threads. Lucid's bio has four links. These posts had about 150k plays.</div></li>
+              <li><div><b>Launches are announced in one post</b>The Rewards Center launched on 11 September in one post (24.1k) with no posts before it. Its four posts averaged 24k. Lucid's equivalent had seven posts and a 163k high. The FX page did post before its launch.</div></li>
+              <li><div><b>FUNDED podcast clips get fewer plays</b>Six clips, a median of 10.8k and a 0.45% like rate, against 23k and 1.33% for the page. The guests are strong, but the opening seconds do not say what the viewer will learn.</div></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sub"><span class="k">C</span><h3>Lucid Trading</h3><p>Fewer posts, with a very consistent style. Most posts are written as jokes about the company itself.</p></div>
+        <div class="two">
+          <div class="card">
+            <h4>Strengths</h4>
+            <ul class="tight">
+              <li><div><b>More plays per post</b>A median of 44.8k plays across 30 Reels, with no collabs.</div></li>
+              <li><div><b>Launches are spread over several posts</b>The Prop Pass ran "SOON" (29.4k), "you're sweating" (55.2k), the launch (163k), then four follow-ups. The $2M competition opened with "How to win TBD" (61k) and a joke terms-and-conditions post (95.3k).</div></li>
+              <li><div><b>A consistent voice</b>For example, "The $2 Million Dollar Trading Competition Based On Nothing In Particular Event". The rock-marketplace post got 2,974 comments, most of them continuing the joke.</div></li>
+              <li><div><b>One code and one end date</b>"40% off, code VAULT" with the end date on screen, posted on 21 August and 14 September (57k and 64.9k).</div></li>
+              <li><div><b>Product announcements written as jokes</b>Optional DLL (66.8k), the mobile app (83.7k) and live cash-out (74.8k) were all above the median.</div></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>Weaknesses</h4>
+            <ul class="tight x">
+              <li><div><b>Many live-stream posters</b>8 of 30 Reels promote the Sunday YouTube show. They are the weakest group, with a 37.5k median and a 0.53% like rate.</div></li>
+              <li><div><b>Almost no trading content</b>No trade clips and one strategy-related post out of 30.</div></li>
+              <li><div><b>Inside jokes can confuse new viewers</b>Running characters such as AJ, Leo, Santo and Minh work for regular viewers. The competition wrap-up got only 14.3k.</div></li>
+              <li><div><b>Low output</b>About three Reels a week.</div></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sub"><span class="k">D</span><h3>Head to head</h3><p>In September both firms launched a pack-opening rewards system and a cash trading competition, within weeks of each other.</p></div>
+        <div class="card">
+          <div class="card-title">Rewards Center vs Prop Pass</div>
+          <div class="card-sub">Tradeify posted its rewards system when it was ready and explained how to earn packs. Lucid teased it for four days, then showed what was inside the packs. Lucid's launch post got more than six times the plays of Tradeify's best.</div>
+          <div class="bars">
+            <div class="brow"><div class="blab"><span class="tg t">T</span>11 Sep · Launch: Missions, Gems, packs</div><div class="btrack"><div class="bfill f-t" data-w="14.8"></div><div class="bval">24.1k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg t">T</span>21 Sep · "We dropped some today"</div><div class="btrack"><div class="bfill f-t" data-w="15.3"></div><div class="bval">25k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg t">T</span>25 Sep · "Sweating from ripping packs"</div><div class="btrack"><div class="bfill f-t" data-w="16"></div><div class="bval">26.1k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg t">T</span>9 Oct · Rewards Center is live</div><div class="btrack"><div class="bfill f-t" data-w="12.9"></div><div class="bval">21k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>23 Sep · Teaser: "SOON"</div><div class="btrack"><div class="bfill f-l" data-w="18"></div><div class="bval">29.4k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>24 Sep · Teaser: "you're sweating"</div><div class="btrack"><div class="bfill f-l" data-w="33.9"></div><div class="bval">55.2k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>27 Sep · Launch: card packs</div><div class="btrack"><div class="bfill f-l" data-w="100"></div><div class="bval">163k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>29 Sep · Marketplace: the rock joke</div><div class="btrack"><div class="bfill f-l" data-w="33.7"></div><div class="bval">54.9k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>30 Sep · Cases</div><div class="btrack"><div class="bfill f-l" data-w="18.5"></div><div class="bval">30.2k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>7 Oct · 200K traders using it</div><div class="btrack"><div class="bfill f-l" data-w="14"></div><div class="bval">22.9k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>8 Oct · Season 1 artwork</div><div class="btrack"><div class="bfill f-l" data-w="15.3"></div><div class="bval">24.9k</div></div></div>
+          </div>
+          <div class="axisline"></div>
+          <div class="ticks"><span>0</span><span>82k</span><span>163k plays</span></div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <div class="card-title">PTL ($1M) vs Lucid's competition ($2M)</div>
+          <div class="card-sub">Lucid's announcement got about four times the plays of Tradeify's. PTL caught up once the creators posted: @raketrades' Day 1 clip got 86.8k, the most of any competition post on either page.</div>
+          <div class="bars">
+            <div class="brow"><div class="blab"><span class="tg t">T</span>9 Sep · Everything about PTL</div><div class="btrack"><div class="bfill f-t" data-w="15.6"></div><div class="bval">15.6k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg t">T</span>11 Sep · Trade against the competition</div><div class="btrack"><div class="bfill f-t" data-w="11.6"></div><div class="bval">11.6k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg t">T</span>15 Sep · Profit Wars</div><div class="btrack"><div class="bfill f-t" data-w="40"></div><div class="bval">40k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg t">T</span>15 Sep · $1M, enter free</div><div class="btrack"><div class="bfill f-t" data-w="15.3"></div><div class="bval">15.3k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg t">T</span>18 Sep · Registration closes in 72h</div><div class="btrack"><div class="bfill f-t" data-w="46.1"></div><div class="bval">46.1k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg t">T</span>29 Sep · Creator League GOAT</div><div class="btrack"><div class="bfill f-t" data-w="15.2"></div><div class="bval">15.2k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg t">T</span>1 Oct · Creator League cuts</div><div class="btrack"><div class="bfill f-t" data-w="56.8"></div><div class="bval">56.8k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>4 Sep · "How to win TBD"</div><div class="btrack"><div class="bfill f-l" data-w="61"></div><div class="bval">61k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>8 Sep · Joke T&amp;Cs</div><div class="btrack"><div class="bfill f-l" data-w="95.3"></div><div class="bval">95.3k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>10 Sep · Day 1</div><div class="btrack"><div class="bfill f-l" data-w="42.6"></div><div class="bval">42.6k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>11 Sep · Day 2</div><div class="btrack"><div class="bfill f-l" data-w="47.1"></div><div class="bval">47.1k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>2 Oct · Winners</div><div class="btrack"><div class="bfill f-l" data-w="14.3"></div><div class="bval">14.3k</div></div></div>
+          </div>
+          <div class="axisline"></div>
+          <div class="ticks"><span>0</span><span>25k</span><span>50k</span><span>75k</span><span>100k plays</span></div>
+        </div>
+
+        <div class="two" style="margin-top:12px">
+          <div class="card">
+            <h4>Similarities</h4>
+            <ul class="tight plain">
+              <li><div>Both are futures prop firms selling similar products: daily-payout accounts, optional daily loss limits, fast funding.</div></li>
+              <li><div>Both launched pack-opening rewards within 16 days of each other.</div></li>
+              <li><div>Both ran a seven-figure trading competition in September.</div></li>
+              <li><div>They share a creator: @raketrades posted PTL Day 1 for Tradeify and hosted Lucid's 5 October live stream.</div></li>
+              <li><div>Both use dark designs with green accents and show P&amp;L on screen. Neither uses Story highlights.</div></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>Differences</h4>
+            <ul class="tight plain">
+              <li><div><b>Reach</b>Tradeify's reach comes from its creators; Lucid's comes from its brand voice.</div></li>
+              <li><div><b>Marketing approach</b>Tradeify promotes the product and the offer; Lucid promotes its people and its humour (see E).</div></li>
+              <li><div><b>Volume and content</b>51 Reels against 15 in the same month. Tradeify shows trading; Lucid shows the company.</div></li>
+              <li><div><b>Launches and offers</b>Tradeify announces launches in one post; Lucid posts before them. Lucid repeats one code and date; Tradeify runs several campaigns at once.</div></li>
+              <li><div><b>Off-platform</b>Lucid sends viewers to YouTube every week and links it in its bio; Tradeify's FUNDED clips point to a link that is not there.</div></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sub"><span class="k">E</span><h3>Two marketing approaches</h3><p>Lucid markets in a similar way to Red Bull: it promotes its people, its running jokes and its collectibles, and the product is part of that. Tradeify promotes the product directly: what it is, how it works, and the offer. The pack launches show the difference most clearly.</p></div>
+        <div class="tblwrap"><table class="vs">
+      <thead><tr><th style="width:18%"></th><th class="t">Tradeify · Rewards Center</th><th class="l">Lucid · Prop Pass</th></tr></thead>
+      <tbody>
+        <tr><td>What the caption sells</td><td>The mechanic: how to get packs. "Complete missions. Earn Gems. Rip packs. Repeat."</td><td>What's inside, and who made it: "cases full of accounts, discounts, and skins", "Santo cried a lot while making these cases".</td></tr>
+        <tr><td>What the viewer imagines</td><td>Doing tasks in a dashboard</td><td>Pulling something rare, showing it off, trading it</td></tr>
+        <tr><td>Where it goes next</td><td>"Rewards Center is live in your Tradeify dashboard"</td><td>A marketplace, and a joke about "cornering the rock market" that drew 2,974 comments</td></tr>
+        <tr><td>Who's on camera</td><td>The pack</td><td>The team who made it: Santo, Minh, AJ</td></tr>
+        <tr><td>Result</td><td class="n">4 posts · 96k plays · best 26.1k</td><td class="n win">7 posts · 380k plays · best 163k</td></tr>
+      </tbody>
+    </table></div>
+        <div class="two" style="margin-top:12px">
+          <div class="card">
+            <h4>How Lucid does it</h4>
+            <ul class="tight plain">
+              <li><div>Staff appear as recurring characters, so viewers follow the people as well as the firm.</div></li>
+              <li><div>Events are given joke names.</div></li>
+              <li><div>Rewards can be collected and traded on a marketplace after the pack is opened.</div></li>
+              <li><div>A weekly show at a fixed time, run like a channel.</div></li>
+              <li><div>Product news is usually presented as a joke. Optional DLL, the app and live cash-out all got more plays than the median.</div></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>How Tradeify does it</h4>
+            <ul class="tight plain">
+              <li><div>Captions list features: "Trade. Rip packs. Claim rewards. Repeat."</div></li>
+              <li><div>Several offers, deadlines and "link in bio" posts run at the same time.</div></li>
+              <li><div>The bio lists specifications: $750k, daily payouts, $250M+ paid out.</div></li>
+            </ul>
+            <div class="fix" style="margin-top:16px"><b>Tradeify already does this in some posts.</b> The W or L clips, DoorDash to Payout, the PTL Creator League and the athlete giveaways are about people rather than offers, and they get more plays and comments than the product posts.</div>
+          </div>
+        </div>
+        <p class="fair"><b>Limits of this comparison</b>Product-focused marketing is what drives sign-ups before a deadline, and sign-ups are not visible from outside. Lucid's approach needs a steady voice and steady output, and its live-stream posters (its weakest group) show what happens when posts are about the brand but not entertaining. For Tradeify, the opportunity is to present more product launches the way it already presents its creator content.</p>
+
+        <div class="sub"><span class="k">F</span><h3>Tradeify 247 and Tradeify FX</h3><p>The 247/FX team markets two products that are separate from the futures business on the main page. They have different markets, platforms and buyers, so content from the main page cannot simply be copied across.</p></div>
+        <div class="tblwrap"><table class="vs">
+      <thead><tr><th style="width:17%"></th><th class="t">Tradeify (futures)</th><th>Tradeify 247</th><th>Tradeify FX</th></tr></thead>
+      <tbody>
+        <tr><td>Markets</td><td>US futures</td><td>Crypto perpetuals (100+ pairs), tokenized US stocks, commodities</td><td>Forex, metals, energies, indices and crypto as CFDs (42 instruments)</td></tr>
+        <tr><td>Hours</td><td>Futures sessions</td><td>24/7, positions held over weekends</td><td>Forex week, weekend holding allowed</td></tr>
+        <tr><td>Platforms</td><td>Futures platforms</td><td>DXTrade, and MT5 outside the US</td><td>MT5</td></tr>
+        <tr><td>Who can buy</td><td>US traders included</td><td>US traders via DXTrade</td><td>Not available to US residents</td></tr>
+        <tr><td>History</td><td>Main brand</td><td>Launched as Tradeify Crypto, renamed 20 Aug 2026</td><td>Waitlist 2 Sep, live 29 Sep 2026</td></tr>
+        <tr><td>Instagram</td><td class="n">@tradeifyfunding · 93.1k</td><td>No account of its own; the site points to @tradeify.fx</td><td class="n">@tradeify.fx · 2,845 · 16 posts, 2 Reels</td></tr>
+        <tr><td>Live offer</td><td>Varies by campaign</td><td>—</td><td>35% off with code OCT, to 31 October</td></tr>
+      </tbody>
+    </table></div>
+        <div class="card" style="margin-top:12px; padding:0">
+          <div style="padding:20px 22px 6px">
+            <div class="card-title">@tradeify.fx in its first six weeks</div>
+            <div class="card-sub">All 16 posts, 1 September to 6 October. The FX page posted before its launch, and posts showing proof got more engagement than discount posts.</div>
+          </div>
+          <div class="tblwrap" style="border:none; border-radius:0 0 var(--radius) var(--radius); background:transparent"><table style="min-width:560px">
+      <thead><tr><th>Date</th><th>Post</th><th>Format</th><th>Likes</th><th>Comments</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1 Sep</td><td>"👀" teaser</td><td>Static</td><td class="n">206</td><td class="n">22</td></tr>
+        <tr class="hi"><td class="n">2 Sep</td><td>"The rumors were true. Waitlist is open." (24.4k plays)</td><td>Reel</td><td class="n">684</td><td class="n">652</td></tr>
+        <tr><td class="n">9 Sep</td><td>Waitlist reward announcement</td><td>Static</td><td class="n">235</td><td class="n">110</td></tr>
+        <tr><td class="n">11 Sep</td><td>Affiliate programme opens</td><td>Static</td><td class="n">153</td><td class="n">16</td></tr>
+        <tr><td class="n">15 Sep</td><td>"Comment why you should test it first"</td><td>Static</td><td class="n">353</td><td class="n">233</td></tr>
+        <tr><td class="n">18 Sep</td><td>Discord, free accounts</td><td>Static</td><td class="n">111</td><td class="n">16</td></tr>
+        <tr><td class="n">20 Sep</td><td>"Closer to launch than most people realise"</td><td>Static</td><td class="n">190</td><td class="n">30</td></tr>
+        <tr><td class="n">28 Sep</td><td>Launch announcement, live on YouTube</td><td>Static</td><td class="n">278</td><td class="n">35</td></tr>
+        <tr><td class="n">29 Sep</td><td>"Tradeify FX is live!" (16.3k plays)</td><td>Reel</td><td class="n">218</td><td class="n">47</td></tr>
+        <tr><td class="n">29 Sep</td><td>50% off, code LAUNCH</td><td>Static</td><td class="n">138</td><td class="n">22</td></tr>
+        <tr class="hi"><td class="n">1 Oct</td><td>"48 hours after launch, and we're already paying out" certificate</td><td>Static</td><td class="n">582</td><td class="n">11</td></tr>
+        <tr class="lo"><td class="n">1 Oct</td><td>Countdown: launch offer ending</td><td>Static</td><td class="n">55</td><td class="n">5</td></tr>
+        <tr><td class="n">1 Oct</td><td>FX Open competition teased</td><td>Static</td><td class="n">194</td><td class="n">27</td></tr>
+        <tr><td class="n">5 Oct</td><td>FX Open: free entry, $1M account</td><td>Static</td><td class="n">200</td><td class="n">24</td></tr>
+        <tr><td class="n">6 Oct</td><td>Partner post with @fundedaward</td><td>Collab</td><td class="n">473</td><td class="n">11</td></tr>
+        <tr class="lo"><td class="n">6 Oct</td><td>$36 for a Classic 2-Step 5K</td><td>Static</td><td class="n">46</td><td class="n">3</td></tr>
+      </tbody>
+    </table></div>
+        </div>
+
+        <div class="sub"><span class="k">G</span><h3>Creator map</h3><p>Everyone who appeared on either page in the sample, with the details I would put in a creator tracker. The notes are starting points for outreach, not decisions.</p></div>
+        <div class="tblwrap"><table>
+      <thead><tr><th>Creator</th><th>Seen on</th><th>Format</th><th>Best Reel</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>@amas.pft</td><td>Tradeify</td><td>W or L trades, strategy breakdowns</td><td class="n">65.4k</td><td>Most-used face on the page; obvious fit for 247/FX trade clips</td></tr>
+        <tr><td>@_claudiarea</td><td>Tradeify</td><td>Milestones, strategy tips</td><td class="n">61.2k</td><td>"$50K milestone" format converts trust into proof</td></tr>
+        <tr><td>@ZaeemTrades</td><td>Tradeify</td><td>Challenge series</td><td class="n">19k</td><td>Highest comment rate on the page</td></tr>
+        <tr><td>@raketrades</td><td>Tradeify and Lucid</td><td>Competition, live streams</td><td class="n">86.8k</td><td>Works with both firms; worth knowing before any exclusive deal</td></tr>
+        <tr><td>@tylerg</td><td>Tradeify</td><td>PTL</td><td class="n">24.6k</td><td>Tool partnership angle (Tradesyncer)</td></tr>
+        <tr><td>@tminnzyx</td><td>Tradeify</td><td>PTL Creator League</td><td class="n">15.2k</td><td>Gaming crossover audience</td></tr>
+        <tr><td>Adesanya · Littler · Head</td><td>Tradeify</td><td>Signed-merch giveaways</td><td class="n">252k</td><td>Reach spikes; pair with an owned follow-up post</td></tr>
+        <tr><td>AJ, Leo, Santo, Minh, Joe</td><td>Lucid</td><td>Staff as characters</td><td class="n">163k</td><td>No outside creators in 30 Reels</td></tr>
+      </tbody>
+    </table></div>
+
+        <div class="sub"><span class="k">H</span><h3>Every Reel</h3><p>Plays are from the grid; everything else is from the post page.</p></div>
+        <div class="card">
+          <div class="card-title">Median plays by content group</div>
+          <div class="card-sub">Both firms on one scale. Athlete giveaways are not shown; they are at 200k.</div>
+          <div class="bars">
+            <div class="brow"><div class="blab"><span class="tg t">T</span>Creator trade clips</div><div class="btrack"><div class="bfill f-t" data-w="39.4"></div><div class="bval">27.6k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg t">T</span>PTL &amp; competitions</div><div class="btrack"><div class="bfill f-t" data-w="35.1"></div><div class="bval">24.6k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg t">T</span>Product launches</div><div class="btrack"><div class="bfill f-t" data-w="34.4"></div><div class="bval">24.1k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg t">T</span>Memes</div><div class="btrack"><div class="bfill f-t" data-w="32.9"></div><div class="bval">23k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg t">T</span>Creator stories</div><div class="btrack"><div class="bfill f-t" data-w="25.1"></div><div class="bval">17.6k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg t">T</span>FUNDED podcast</div><div class="btrack"><div class="bfill f-t" data-w="15.4"></div><div class="bval">10.8k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>Product features</div><div class="btrack"><div class="bfill f-l" data-w="95.4"></div><div class="bval">66.8k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>Promo code</div><div class="btrack"><div class="bfill f-l" data-w="87.1"></div><div class="bval">61k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>Community memes</div><div class="btrack"><div class="bfill f-l" data-w="79.3"></div><div class="bval">55.5k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>Competition</div><div class="btrack"><div class="bfill f-l" data-w="67.3"></div><div class="bval">47.1k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>YouTube live posters</div><div class="btrack"><div class="bfill f-l" data-w="53.6"></div><div class="bval">37.5k</div></div></div>
+            <div class="brow"><div class="blab"><span class="tg l">L</span>Prop Pass arc</div><div class="btrack"><div class="bfill f-l" data-w="43.1"></div><div class="bval">30.2k</div></div></div>
+          </div>
+          <div class="axisline"></div>
+          <div class="ticks"><span>0</span><span>35k</span><span>70k plays</span></div>
+        </div>
+        <details class="raw tbl">
+          <summary>Tradeify · all 51 Reels, 9 Sep to 9 Oct 2026</summary>
+          <div class="tblwrap"><table class="wide">
+      <thead><tr><th>Date</th><th>Caption, shortened</th><th>Group</th><th>Posted by</th><th>Plays</th><th>Likes</th><th>Comments</th></tr></thead>
+      <tbody>
+<tr><td class="n">9 Oct</td><td>Rewards Center: trade, rip packs, claim rewards</td><td>Product</td><td>Tradeify</td><td class="n">21k</td><td class="n">210</td><td class="n">17</td></tr>
+<tr><td class="n">8 Oct</td><td>W or L trade #trading #explore #viral</td><td>Creator trade clip</td><td>@amas.pft</td><td class="n">27.6k</td><td class="n">337</td><td class="n">23</td></tr>
+<tr><td class="n">8 Oct</td><td>POV: the friend group is counting on you</td><td>Meme</td><td>Tradeify</td><td class="n">16.4k</td><td class="n">189</td><td class="n">14</td></tr>
+<tr><td class="n">8 Oct</td><td>Fair value gap strategy EXPLAINED</td><td>Creator trade clip</td><td>@amas.pft</td><td class="n">13k</td><td class="n">286</td><td class="n">8</td></tr>
+<tr><td class="n">8 Oct</td><td>FUNDED ep. w/ NinjaTrader: trading impacts people around you</td><td>FUNDED podcast</td><td>Tradeify</td><td class="n">9,504</td><td class="n">20</td><td class="n">3</td></tr>
+<tr><td class="n">7 Oct</td><td>W or L trade #trading #explore #viral</td><td>Creator trade clip</td><td>@amas.pft</td><td class="n">32.5k</td><td class="n">629</td><td class="n">21</td></tr>
+<tr><td class="n">6 Oct</td><td>W or L trade #trading #explore #viral</td><td>Creator trade clip</td><td>@amas.pft</td><td class="n">13.6k</td><td class="n">227</td><td class="n">10</td></tr>
+<tr><td class="n">6 Oct</td><td>too close</td><td>Meme</td><td>Tradeify</td><td class="n">26.5k</td><td class="n">380</td><td class="n">28</td></tr>
+<tr><td class="n">6 Oct</td><td>The mechanics behind prop firms</td><td>FUNDED podcast</td><td>Tradeify</td><td class="n">10k</td><td class="n">28</td><td class="n">7</td></tr>
+<tr><td class="n">6 Oct</td><td>Asking strangers long or short</td><td>Creator story</td><td>@zaeemtradesclips</td><td class="n">2,155</td><td class="n">33</td><td class="n">0</td></tr>
+<tr><td class="n">5 Oct</td><td>W or L trade #trading #explore #viral</td><td>Creator trade clip</td><td>Tradeify</td><td class="n">31.1k</td><td class="n">318</td><td class="n">13</td></tr>
+<tr><td class="n">5 Oct</td><td>The truth about prop firm trading</td><td>Creator trade clip</td><td>@amas.pft</td><td class="n">19.3k</td><td class="n">356</td><td class="n">27</td></tr>
+<tr><td class="n">5 Oct</td><td>@SlayTheMarkets is live: send payouts to a personal account</td><td>Product</td><td>Tradeify</td><td class="n">18.7k</td><td class="n">181</td><td class="n">7</td></tr>
+<tr><td class="n">2 Oct</td><td>Forge Drop: 10 levels, $35K in payouts</td><td>Product</td><td>Tradeify</td><td class="n">39.1k</td><td class="n">698</td><td class="n">145</td></tr>
+<tr><td class="n">1 Oct</td><td>PTL Creator League: cuts are tonight</td><td>PTL / competition</td><td>Tradeify</td><td class="n">56.8k</td><td class="n">793</td><td class="n">134</td></tr>
+<tr><td class="n">1 Oct</td><td>DoorDash to Payout: @ZaeemTrades emotional trader</td><td>Creator story</td><td>Tradeify</td><td class="n">19k</td><td class="n">193</td><td class="n">172</td></tr>
+<tr><td class="n">30 Sep</td><td>The only FVG strategy you need</td><td>Creator trade clip</td><td>@amas.pft</td><td class="n">14.5k</td><td class="n">290</td><td class="n">130</td></tr>
+<tr><td class="n">30 Sep</td><td>DoorDash to Payout: $500K in payouts on pause</td><td>Creator story</td><td>Tradeify</td><td class="n">16.2k</td><td class="n">204</td><td class="n">119</td></tr>
+<tr><td class="n">29 Sep</td><td>DoorDash to Payout: 10 days from $0</td><td>Creator story</td><td>Tradeify</td><td class="n">12k</td><td class="n">232</td><td class="n">166</td></tr>
+<tr><td class="n">29 Sep</td><td>My iFVG strategy EXPLAINED</td><td>Creator trade clip</td><td>@amas.pft</td><td class="n">32.7k</td><td class="n">482</td><td class="n">16</td></tr>
+<tr><td class="n">29 Sep</td><td>PTL Creator League: @tminnzyx self-proclaimed GOAT</td><td>PTL / competition</td><td>Tradeify</td><td class="n">15.2k</td><td class="n">76</td><td class="n">17</td></tr>
+<tr><td class="n">28 Sep</td><td>Knowledge is power, knowing what to do with it</td><td>FUNDED podcast</td><td>Tradeify</td><td class="n">8,758</td><td class="n">30</td><td class="n">4</td></tr>
+<tr><td class="n">28 Sep</td><td>My EXACT trading strategy explained</td><td>Creator trade clip</td><td>@amas.pft</td><td class="n">65.4k</td><td class="n">1,164</td><td class="n">22</td></tr>
+<tr><td class="n">28 Sep</td><td>When Zapdos said AAAAAAAA</td><td>Meme</td><td>Tradeify</td><td class="n">18.6k</td><td class="n">173</td><td class="n">5</td></tr>
+<tr><td class="n">28 Sep</td><td>National Prop Trading Day OOO</td><td>Meme</td><td>Tradeify</td><td class="n">23k</td><td class="n">230</td><td class="n">29</td></tr>
+<tr><td class="n">25 Sep</td><td>Sweating from ripping all these packs</td><td>Product</td><td>Tradeify</td><td class="n">26.1k</td><td class="n">467</td><td class="n">38</td></tr>
+<tr><td class="n">24 Sep</td><td>W or L trade #trading #explore #viral</td><td>Creator trade clip</td><td>Tradeify</td><td class="n">58.5k</td><td class="n">765</td><td class="n">48</td></tr>
+<tr><td class="n">23 Sep</td><td>@Tradeify247 now live: no market hours</td><td>Product</td><td>Tradeify</td><td class="n">16.2k</td><td class="n">176</td><td class="n">17</td></tr>
+<tr><td class="n">22 Sep</td><td>Day 1 @joinptl</td><td>PTL / competition</td><td>@raketrades</td><td class="n">86.8k</td><td class="n">1,552</td><td class="n">190</td></tr>
+<tr><td class="n">22 Sep</td><td>PTL + TG Tradesyncer</td><td>PTL / competition</td><td>@tylerg</td><td class="n">24.6k</td><td class="n">412</td><td class="n">130</td></tr>
+<tr><td class="n">22 Sep</td><td>W or L trade #trading #explore #viral</td><td>Creator trade clip</td><td>@amas.pft</td><td class="n">15.3k</td><td class="n">222</td><td class="n">14</td></tr>
+<tr><td class="n">22 Sep</td><td>You dont spend this much time unless you love it</td><td>FUNDED podcast</td><td>Tradeify</td><td class="n">15.7k</td><td class="n">107</td><td class="n">3</td></tr>
+<tr><td class="n">21 Sep</td><td>W or L trade #trading #explore #viral</td><td>Creator trade clip</td><td>@amas.pft</td><td class="n">16.7k</td><td class="n">317</td><td class="n">18</td></tr>
+<tr><td class="n">21 Sep</td><td>We dropped some packs today</td><td>Product</td><td>Tradeify</td><td class="n">25k</td><td class="n">467</td><td class="n">25</td></tr>
+<tr><td class="n">20 Sep</td><td>Keep entering too early? One small tweak</td><td>Creator story</td><td>@_claudiarea</td><td class="n">28.9k</td><td class="n">460</td><td class="n">24</td></tr>
+<tr><td class="n">18 Sep</td><td>PTL registration closes in 72 hours</td><td>PTL / competition</td><td>Tradeify</td><td class="n">46.1k</td><td class="n">786</td><td class="n">29</td></tr>
+<tr><td class="n">17 Sep</td><td>Hit the $50K milestone with Tradeify in 6 months</td><td>Creator story</td><td>@_claudiarea</td><td class="n">61.2k</td><td class="n">1,086</td><td class="n">32</td></tr>
+<tr><td class="n">17 Sep</td><td>Travis Head: 20 signed shirts</td><td>Athlete giveaway</td><td>@travishead34</td><td class="n">140k</td><td class="n">6,963</td><td class="n">64</td></tr>
+<tr><td class="n">16 Sep</td><td>Israel Adesanya: 30 signed gloves</td><td>Athlete giveaway</td><td>@stylebender</td><td class="n">252k</td><td class="n">1,966</td><td class="n">38</td></tr>
+<tr><td class="n">16 Sep</td><td>W or L trade #trading #explore #viral</td><td>Creator trade clip</td><td>@amas.pft</td><td class="n">59.4k</td><td class="n">883</td><td class="n">26</td></tr>
+<tr><td class="n">15 Sep</td><td>$1,000,000 on the line. Enter PTL free. Link in bio</td><td>PTL / competition</td><td>Tradeify</td><td class="n">15.3k</td><td class="n">156</td><td class="n">20</td></tr>
+<tr><td class="n">15 Sep</td><td>Welcome to Profit Wars: four traders, one champion</td><td>PTL / competition</td><td>Tradeify</td><td class="n">40k</td><td class="n">321</td><td class="n">15</td></tr>
+<tr><td class="n">11 Sep</td><td>Complete missions. Earn Gems. Rip packs</td><td>Product</td><td>Tradeify</td><td class="n">24.1k</td><td class="n">455</td><td class="n">29</td></tr>
+<tr><td class="n">11 Sep</td><td>Trade against the competition: PTL</td><td>PTL / competition</td><td>Tradeify</td><td class="n">11.6k</td><td class="n">72</td><td class="n">9</td></tr>
+<tr><td class="n">10 Sep</td><td>Everyone wants to be sold the dream</td><td>FUNDED podcast</td><td>Tradeify</td><td class="n">11.6k</td><td class="n">64</td><td class="n">13</td></tr>
+<tr><td class="n">10 Sep</td><td>W or L trade #trading #viral #explore</td><td>Creator trade clip</td><td>@amas.pft</td><td class="n">26.4k</td><td class="n">277</td><td class="n">16</td></tr>
+<tr><td class="n">9 Sep</td><td>Not financial advice. This is peer pressure</td><td>Meme</td><td>Tradeify</td><td class="n">24.9k</td><td class="n">339</td><td class="n">41</td></tr>
+<tr><td class="n">9 Sep</td><td>W or L trade #trading #explore #viral</td><td>Creator trade clip</td><td>@amas.pft</td><td class="n">49.3k</td><td class="n">634</td><td class="n">34</td></tr>
+<tr><td class="n">9 Sep</td><td>Luke Littler: 30 signed shirts</td><td>Athlete giveaway</td><td>@lukethenukelittler</td><td class="n">200k</td><td class="n">—</td><td class="n">—</td></tr>
+<tr><td class="n">9 Sep</td><td>Trading tests your patience before it pays</td><td>FUNDED podcast</td><td>Tradeify</td><td class="n">12.5k</td><td class="n">102</td><td class="n">17</td></tr>
+<tr><td class="n">9 Sep</td><td>Everything you need to know about PTL</td><td>PTL / competition</td><td>Tradeify</td><td class="n">15.6k</td><td class="n">177</td><td class="n">8</td></tr>
+      </tbody>
+    </table></div>
+        </details>
+        <details class="raw tbl">
+          <summary>Lucid · all 30 Reels, 27 Jul to 12 Oct 2026</summary>
+          <div class="tblwrap"><table class="wide">
+      <thead><tr><th>Date</th><th>Caption, shortened</th><th>Group</th><th>Plays</th><th>Likes</th><th>Comments</th></tr></thead>
+      <tbody>
+<tr><td class="n">12 Oct</td><td>AJ rode his jetski from the Caymans: YouTube Live 2PM</td><td>YouTube live promo</td><td class="n">19.5k</td><td class="n">44</td><td class="n">0</td></tr>
+<tr><td class="n">12 Oct</td><td>Every trader has bad days. Best prices on DLL accounts</td><td>Relatable + offer</td><td class="n">57.7k</td><td class="n">1,270</td><td class="n">40</td></tr>
+<tr><td class="n">8 Oct</td><td>Season 1 artwork: &quot;Show us on the Prop Pass where Minh touched you&quot;</td><td>Prop Pass arc</td><td class="n">24.9k</td><td class="n">190</td><td class="n">18</td></tr>
+<tr><td class="n">7 Oct</td><td>Over 200K traders are using Prop Pass</td><td>Prop Pass arc</td><td class="n">22.9k</td><td class="n">337</td><td class="n">66</td></tr>
+<tr><td class="n">5 Oct</td><td>Livestream &quot;jakeover&quot; with @raketrades</td><td>YouTube live promo</td><td class="n">29.9k</td><td class="n">96</td><td class="n">5</td></tr>
+<tr><td class="n">2 Oct</td><td>$2M Competition Based On Nothing In Particular: winners</td><td>Competition</td><td class="n">14.3k</td><td class="n">156</td><td class="n">105</td></tr>
+<tr><td class="n">30 Sep</td><td>AI has no feelings, but Santo cried making these cases</td><td>Prop Pass arc</td><td class="n">30.2k</td><td class="n">278</td><td class="n">121</td></tr>
+<tr><td class="n">29 Sep</td><td>Prop Pass marketplace: &quot;cornering the rock market&quot;</td><td>Prop Pass arc</td><td class="n">54.9k</td><td class="n">543</td><td class="n">2,974</td></tr>
+<tr><td class="n">27 Sep</td><td>Card packs arrive, flattened by cases of accounts and skins</td><td>Prop Pass arc</td><td class="n">163k</td><td class="n">2,581</td><td class="n">412</td></tr>
+<tr><td class="n">24 Sep</td><td>Teaser: &quot;You&#x27;re sweating (because what&#x27;s coming is so big)&quot;</td><td>Prop Pass arc</td><td class="n">55.2k</td><td class="n">1,284</td><td class="n">134</td></tr>
+<tr><td class="n">23 Sep</td><td>Teaser: &quot;SOON&quot;</td><td>Prop Pass arc</td><td class="n">29.4k</td><td class="n">790</td><td class="n">71</td></tr>
+<tr><td class="n">21 Sep</td><td>Court is in session: Judge Joe-dy reviews Discord ban appeals</td><td>YouTube live promo</td><td class="n">34.4k</td><td class="n">180</td><td class="n">30</td></tr>
+<tr><td class="n">17 Sep</td><td>Live cash-out: &quot;cashing out isn&#x27;t an option&quot; for me</td><td>Product feature</td><td class="n">74.8k</td><td class="n">2,103</td><td class="n">100</td></tr>
+<tr><td class="n">14 Sep</td><td>LucidDaily 40% off extended. Code VAULT</td><td>Promo code</td><td class="n">64.9k</td><td class="n">497</td><td class="n">41</td></tr>
+<tr><td class="n">14 Sep</td><td>Livestream 2PM: Cayman content</td><td>YouTube live promo</td><td class="n">36.9k</td><td class="n">195</td><td class="n">32</td></tr>
+<tr><td class="n">11 Sep</td><td>Competition day 2: highest PnL</td><td>Competition</td><td class="n">47.1k</td><td class="n">464</td><td class="n">31</td></tr>
+<tr><td class="n">10 Sep</td><td>Competition day 1</td><td>Competition</td><td class="n">42.6k</td><td class="n">355</td><td class="n">35</td></tr>
+<tr><td class="n">8 Sep</td><td>&quot;lil terms and conditions&quot; before the tournament</td><td>Competition</td><td class="n">95.3k</td><td class="n">2,079</td><td class="n">224</td></tr>
+<tr><td class="n">4 Sep</td><td>$2M in prizes. &quot;How to win TBD&quot;</td><td>Competition</td><td class="n">61k</td><td class="n">1,062</td><td class="n">273</td></tr>
+<tr><td class="n">31 Aug</td><td>&quot;You&#x27;ll never know we&#x27;re not going live today&quot;</td><td>YouTube live promo</td><td class="n">42.5k</td><td class="n">390</td><td class="n">30</td></tr>
+<tr><td class="n">24 Aug</td><td>Livestream: prediction markets</td><td>YouTube live promo</td><td class="n">38.8k</td><td class="n">206</td><td class="n">26</td></tr>
+<tr><td class="n">21 Aug</td><td>7 more days of LucidDaily promo, code VAULT</td><td>Promo code</td><td class="n">57k</td><td class="n">1,121</td><td class="n">70</td></tr>
+<tr><td class="n">19 Aug</td><td>Single stock futures are here</td><td>Product feature</td><td class="n">40.2k</td><td class="n">221</td><td class="n">25</td></tr>
+<tr><td class="n">17 Aug</td><td>Live on YouTube at 2PM</td><td>YouTube live promo</td><td class="n">38.1k</td><td class="n">160</td><td class="n">32</td></tr>
+<tr><td class="n">14 Aug</td><td>&quot;Beggars are family.&quot; Join the Discord</td><td>Community meme</td><td class="n">79.5k</td><td class="n">2,074</td><td class="n">134</td></tr>
+<tr><td class="n">12 Aug</td><td>Help design the Lucid LARPmobile</td><td>Community meme</td><td class="n">31.5k</td><td class="n">683</td><td class="n">41</td></tr>
+<tr><td class="n">5 Aug</td><td>DLL is now optional</td><td>Product feature</td><td class="n">66.8k</td><td class="n">787</td><td class="n">105</td></tr>
+<tr><td class="n">30 Jul</td><td>Lucid Trading app on iOS and Android</td><td>Product feature</td><td class="n">83.7k</td><td class="n">1,694</td><td class="n">107</td></tr>
+<tr><td class="n">29 Jul</td><td>Intraday drawdown, fast-forwarded</td><td>Product feature</td><td class="n">64.6k</td><td class="n">510</td><td class="n">68</td></tr>
+<tr><td class="n">27 Jul</td><td>AJ and Leo live: app reviews and a new plan</td><td>YouTube live promo</td><td class="n">47k</td><td class="n">370</td><td class="n">36</td></tr>
+      </tbody>
+    </table></div>
+        </details>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ 03 WHO I AM ============ -->
+  <section id="me">
+    <div class="sec-head">
+      <span class="num">03 · WHO I AM</span>
+      <h2>Who I am and what I do</h2>
+      <p>I learn quickly and get things done. I taught myself video editing, design and AI workflows because my work needed them.</p>
+    </div>
+
+    <div class="sub" style="margin-top:0"><span class="k">Content strategist (contract) · The Shades of Trades · Sep–Oct 2026</span><h3>I handled the full content pipeline for a 517K-follower trading education account</h3></div>
+    <div class="tiles">
+      <div class="tile"><div class="k">Account followers</div><div class="v">517K</div><div class="d">The Shades of Trades · Apoorva Sharma</div></div>
+      <div class="tile"><div class="k">Views generated</div><div class="v">500K</div><div class="d">across 27 reels</div></div>
+      <div class="tile"><div class="k">Best reel</div><div class="v">60K</div><div class="d">views</div></div>
+      <div class="tile"><div class="k">Average views per reel</div><div class="v ok">18K</div><div class="d">up from about 10K (+80%)</div></div>
+    </div>
+    <div class="checks" style="margin-top:22px">
+      <div class="check"><span class="bx">✓</span><div><b>Content audit</b>Audited Apoorva Sharma's last 108 posts on my own initiative in August 2026 (<a href="https://samyukth-774.github.io/Shades-Of-Trades-Audit/">see the audit</a>). Started as her content strategist in September.</div></div>
+      <div class="check"><span class="bx">✓</span><div><b>Content systems</b>Daily 8:30 AM research routine, a Kanban board and a themes log in Google Sheets. Wrote a 90-script beginner series in Hinglish.</div></div>
+      <div class="check"><span class="bx">✓</span><div><b>Community moderation</b>8+ hours a day moderating The5ers India on Telegram: answering traders, routing account issues, removing spam.</div></div>
+      <div class="check"><span class="bx">✓</span><div><b>Event speaker</b>Invited by The5ers to speak at a Trade The Pool event in December 2025. Wrote and gave the talk.</div></div>
+      <div class="check"><span class="bx">✓</span><div><b>Crowd Positioning Theory</b>Made Apoorva's price-action framework a regular part of her Reels and Stories.</div></div>
+      <div class="check"><span class="bx">✓</span><div><b>Languages and education</b>English (IELTS 8.5), Hindi and Telugu. B.Tech in AI and ML, CGPA 8.43 (2022–2026).</div></div>
+    </div>
+  </section>
+
+  <!-- ============ 04 WHY TRADEIFY ============ -->
+  <section id="why">
+    <div class="sec-head">
+      <span class="num">04 · WHY TRADEIFY</span>
+      <h2>I am passionate about the prop industry and about working in its marketing</h2>
+      <p>I love this industry and want to build my career in its marketing, at Tradeify.</p>
+    </div>
+    <div class="checks" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))">
+      <div class="check"><span class="bx">◆</span><div><b>I have traded with Tradeify</b>I know Tradeify's rules, regulations and how its accounts work, from trading them myself.</div></div>
+      <div class="check"><span class="bx">◆</span><div><b>I know the prop firm space</b>Evaluation and funded accounts across several firms since May 2024, and daily contact with traders as a moderator.</div></div>
+      <div class="check"><span class="bx">◆</span><div><b>I want to help wherever I can</b>Creators, social, email, paid or affiliates: I am happy to take on whatever the team needs.</div></div>
+      <div class="check"><span class="bx">◆</span><div><b>I want to keep learning</b>I researched Tradeify in depth before applying, and I want to keep learning from the team.</div></div>
+    </div>
+  </section>
+
+  <!-- ============ 05 THE INDUSTRY ============ -->
+  <section id="industry">
+    <div class="sec-head">
+      <span class="num">05 · THE PROP INDUSTRY</span>
+      <h2>What I have learned about the prop industry</h2>
+      <p>From trading since May 2024, moderating a trader community every day, and the research on this page.</p>
+    </div>
+    <div class="two">
+      <div class="card"><h4>01</h4><div class="card-title">Trust matters most</div><p class="card-sub" style="font-size:14px; margin-top:8px">On @tradeify.fx, payout proof got 582 likes. Discount-only posts got 55 and 46.</p></div>
+      <div class="card"><h4>02</h4><div class="card-title">Firms offer similar products</div><p class="card-sub" style="font-size:14px; margin-top:8px">Tradeify and Lucid launched similar rewards and competitions in September. How each was presented made the difference.</p></div>
+      <div class="card"><h4>03</h4><div class="card-title">Traders ask the same questions</div><p class="card-sub" style="font-size:14px; margin-top:8px">Rules, drawdowns, payouts and platforms come up daily. Each repeat question is a content topic.</p></div>
+      <div class="card"><h4>04</h4><div class="card-title">People engage more with traders than with product posts</div><p class="card-sub" style="font-size:14px; margin-top:8px">On Tradeify's page, trade clips, creator series and athlete giveaways beat product posts.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 06 THE ROLE ============ -->
+  <section id="role">
+    <div class="sec-head">
+      <span class="num">06 · THE ROLE</span>
+      <h2>The job listing, line by line</h2>
+    </div>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th style="width:42%">The listing asks for</th><th>Where it shows</th></tr></thead>
+        <tbody>
+          <tr><td>Find creators, build a creator spreadsheet, first-touch outreach</td><td>Creator map in section 02. Worked on a 517K-follower creator's content.</td></tr>
+          <tr><td>Manage content pipelines</td><td>Ran The Shades of Trades pipeline on a Kanban board and themes log.</td></tr>
+          <tr><td>Film and produce simple UGC</td><td>The reel above. DaVinci Resolve and Final Cut Pro.</td></tr>
+          <tr><td>Design social posts, banners and affiliate creatives</td><td>The 2X Gems design above. Canva.</td></tr>
+          <tr><td>Competitor and market research</td><td>Section 02: 81 Reels, every @tradeify.fx post, 247 and FX products.</td></tr>
+          <tr><td>Align social, email, paid and affiliates on offers and dates</td><td>Shared offer sheet (2.2), plus the link and pricing issues I found.</td></tr>
+          <tr><td>Engagement and reply support</td><td>8+ hours a day answering traders for The5ers India.</td></tr>
+          <tr><td>Organisation with spreadsheets and trackers</td><td>Kanban board, themes log and content calendars in Google Sheets.</td></tr>
+          <tr><td>Nice to have: crypto, tokenized asset and FX communities</td><td>Long-time member of these communities.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="kicker">
+      <p>What I would work on first</p>
+      <ol>
+        <li><b>Link-in-bio page and shared offer sheet</b> for live codes, dates, handles and creatives.</li>
+        <li><b>Creator spreadsheet and outreach</b> for 247 and FX, built from the creator map.</li>
+        <li><b>W or L style UGC</b> recorded on MT5 and DXTrade for 247 and FX.</li>
+        <li><b>Four-post launch plan</b> for the next 247 or FX launch, as a collab with @tradeifyfunding.</li>
+      </ol>
+      <p class="close">I am available to start immediately. Thank you for reading.</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 RESUME ============ -->
+  <section id="resume">
+    <div class="sec-head">
+      <span class="num">07</span>
+      <h2>Resume</h2>
+    </div>
+    <div class="resume-actions">
+      <a class="btn" href="assets/Samyukth-Bitra-Resume.pdf" download>Download PDF ↓</a>
+      <a class="btn" href="assets/Samyukth-Bitra-Resume.pdf" target="_blank" rel="noopener">Open in a new tab ↗</a>
+    </div>
+    <!-- ponytail: page images, not an <object> embed; PDF embeds render blank or page-1-only in many browsers. Re-render with: pdftoppm -r 144 -png Samyukth-Bitra-Resume.pdf resume -->
+    <div class="resume">
+      <img src="assets/resume-1.png" alt="Resume, page 1 of 3" loading="lazy">
+      <img src="assets/resume-2.png" alt="Resume, page 2 of 3" loading="lazy">
+      <img src="assets/resume-3.png" alt="Resume, page 3 of 3" loading="lazy">
+    </div>
+  </section>
+
+  <footer>
+    Research compiled 12 to 13 October 2026 from the public Instagram pages <a href="https://www.instagram.com/tradeifyfunding/">instagram.com/tradeifyfunding</a> and <a href="https://www.instagram.com/tradinglucid/">instagram.com/tradinglucid</a>, and every post on <a href="https://www.instagram.com/tradeify.fx/">@tradeify.fx</a>. Play counts are from each Reels grid; dates, captions, likes, comments and original posters are from each Reel's page. Saves, shares, watch time, reach split, link taps and demographics are not visible from outside and are not claimed here. Nothing here is investment advice.
+    <br><br>Samyukth Bitra · <a href="mailto:samyukthbitra@gmail.com">samyukthbitra@gmail.com</a>
+  </footer>
+</div>
+
+<dialog class="zoom" id="zoom" aria-label="Design, enlarged">
+  <button class="zoom-close" type="button" aria-label="Close">✕</button>
+  <div class="zoom-inner"><img alt="Canva design for the 2X Gems offer, full size"></div>
+</dialog>
+
+<script>
+(function(){
+  "use strict";
+  /* ---------- suggested changes: expand / collapse all ---------- */
+  (function(){
+    var btn = document.getElementById('expandAll'); if (!btn) return;
+    var items = document.querySelectorAll('#research > .acc details.item');
+    btn.addEventListener('click', function(){
+      var open = Array.prototype.some.call(items, function(d){ return !d.open; });
+      items.forEach(function(d){ d.open = open; });
+      btn.textContent = open ? 'Collapse all' : 'Expand all';
+    });
+  })();
+
+  /* ---------- design zoom: click opens a <dialog>; click the image for full size; Esc, ✕ or backdrop closes ---------- */
+  (function(){
+    var dlg = document.getElementById('zoom');
+    if (!dlg || !dlg.showModal) return;
+    var inner = dlg.querySelector('.zoom-inner'), big = inner.querySelector('img');
+    document.querySelectorAll('.slot.zoomable').forEach(function(s){
+      s.addEventListener('click', function(){
+        var img = s.querySelector('img'); if (!img) return;
+        big.src = img.src; inner.classList.remove('full'); dlg.showModal();
+      });
+    });
+    big.addEventListener('click', function(e){ e.stopPropagation(); inner.classList.toggle('full'); });
+    inner.addEventListener('click', function(){ dlg.close(); });
+    dlg.querySelector('.zoom-close').addEventListener('click', function(){ dlg.close(); });
+  })();
+
+  var root = document.documentElement;
+  document.getElementById('themeBtn').addEventListener('click', function(){
+    root.setAttribute('data-theme', root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  /* ---------- media slots: placeholder text stays until the file exists in assets/ ---------- */
+  document.querySelectorAll('[data-media]').forEach(function(s){
+    var src = s.dataset.media, v = /\.(mp4|mov|webm)$/i.test(src);
+    var el = document.createElement(v ? 'video' : 'img');
+    el.onerror = function(){ el.remove(); };
+    if (v) {
+      el.controls = true; el.playsInline = true; el.preload = 'metadata';
+      if (s.dataset.poster) el.poster = s.dataset.poster;
+      var source = document.createElement('source');
+      source.src = src; source.type = 'video/mp4';
+      source.onerror = function(){ el.remove(); };
+      el.appendChild(source);
+    } else { el.src = src; el.alt = ''; el.loading = 'lazy'; }
+    s.appendChild(el);
+  });
+
+  /* ---------- bars grow in when they scroll into view ---------- */
+  var fills = document.querySelectorAll('.bfill');
+  var reduceBars = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  fills.forEach(function(f){ f.style.width = reduceBars ? f.dataset.w + '%' : '0%'; });
+  if (!reduceBars) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (!e.isIntersecting) return;
+        e.target.querySelectorAll('.bfill').forEach(function(f, i){
+          setTimeout(function(){ f.style.width = f.dataset.w + '%'; }, 40 + i * 30);
+        });
+        io.unobserve(e.target);
+      });
+    }, { threshold:0.15 });
+    document.querySelectorAll('.bars').forEach(function(b){ io.observe(b); });
+  }
+
+  /* ================= Scanner — vanilla WebGL2 port of React Bits <Scanner /> =================
+     Verbatim from the Shades of Trades audit; colours softened to Tradeify green, brightness down. */
+  (function(){
+    var container = document.getElementById('scanner');
+    if (!container) return;
+
+    var OPTS = {
+      color1:'#0c2414', color2:'#3e9e58', color3:'#d9efdc',
+      speed:0.4, sweepSpeed:0.16, sweepWidth:2.2, sweepFalloff:4.5,
+      scale:2.1, frequency:1.7, ripple:0.28, bandDensity:8, lineSharpness:4.2, glow:0.22,
+      scanDirection:'diagonal', colorSpread:0.14, brightness:0.95, contrast:1.1,
+      softness:1.6, vignette:0.30, scanline:false, grain:true, grainIntensity:0.03,
+      opacity:1.0, mouseInteraction:true, mouseRadius:0.55, mouseStrength:0.5
+    };
+
+    function hexToRgb(hex){
+      var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      if (!m) return [1,1,1];
+      return [parseInt(m[1],16)/255, parseInt(m[2],16)/255, parseInt(m[3],16)/255];
+    }
+    function dirToFloat(d){ return d === 'horizontal' ? 1.0 : d === 'diagonal' ? 2.0 : 0.0; }
+
+    var VERT = '#version 300 es\nin vec2 position;\nvoid main(){ gl_Position = vec4(position, 0.0, 1.0); }\n';
+
+    var FRAG = [
+'#version 300 es',
+'precision highp float;',
+'uniform vec2 iResolution; uniform float iTime;',
+'uniform float uSpeed, uSweepSpeed, uSweepWidth, uSweepFalloff, uScale, uFrequency, uRipple;',
+'uniform float uBandDensity, uLineSharpness, uGlow, uColorSpread, uBrightness, uContrast;',
+'uniform float uSoftness, uVignette, uOpacity, uScanline, uGrain, uGrainIntensity, uDirection;',
+'uniform float uScroll;',
+'uniform vec2 uMouse;',
+'uniform float uMouseEnabled, uMouseRadius, uMouseStrength, uMouseActive;',
+'uniform vec3 uColor1, uColor2, uColor3;',
+'out vec4 fragColor;',
+'const float TAU = 6.2831853;',
+'float signalField(vec2 p, float t){',
+'  float w = sin(p.x * 1.3 + t * 0.7);',
+'  w += sin(p.y * 1.7 - t * 0.52) * 0.8;',
+'  w += sin((p.x + p.y) * 0.9 + t * 0.91) * 0.6;',
+'  w += sin((p.x - p.y) * 1.53 - t * 0.63) * 0.42;',
+'  return w * 0.35;',
+'}',
+'vec3 palette(float f){',
+'  f = clamp(f, 0.0, 1.0);',
+'  f = pow(f, uContrast);',
+'  vec3 c = mix(uColor1, uColor2, smoothstep(0.08, 0.6, f));',
+'  return mix(c, uColor3, smoothstep(0.68, 1.0, f));',
+'}',
+'float scanBand(float x, float aa, float sharp){',
+'  float v = mix(0.5, 0.5 + 0.5 * cos(x * TAU), aa);',
+'  return pow(v, sharp);',
+'}',
+'void main(){',
+'  float aspect = iResolution.x / iResolution.y;',
+'  vec2 uv0 = (gl_FragCoord.xy * 2.0 - iResolution.xy) / iResolution.y;',
+'  vec2 p = (uv0 + vec2(0.0, uScroll)) / max(uScale, 0.001);',
+'  float t = iTime * uSpeed;',
+'  float mouseBoost = 0.0;',
+'  if (uMouseEnabled > 0.5) {',
+'    vec2 mUv = vec2((uMouse.x * 2.0 - 1.0) * aspect, uMouse.y * 2.0 - 1.0);',
+'    vec2 md = uv0 - mUv;',
+'    float r = max(uMouseRadius, 0.001);',
+'    mouseBoost = exp(-dot(md, md) / (r * r)) * uMouseStrength * uMouseActive;',
+'  }',
+'  float axis;',
+'  if (uDirection < 0.5) axis = p.y;',
+'  else if (uDirection < 1.5) axis = p.x;',
+'  else axis = (p.x + p.y) * 0.70710678;',
+'  float sig = signalField(p * uFrequency, t);',
+'  float coord = axis + sig * uRipple;',
+'  float phase = coord / max(uSweepWidth, 0.05) - t * uSweepSpeed;',
+'  float sweep = pow(0.5 + 0.5 * cos(phase * TAU), max(uSweepFalloff, 0.1));',
+'  float lc = coord * uBandDensity;',
+'  float aa = 1.0 / (1.0 + uSoftness * fwidth(lc) * 3.0);',
+'  aa = clamp(aa * (1.0 + mouseBoost * 0.6), 0.0, 1.0);',
+'  float bodyBase = clamp(0.5 + 0.5 * sig, 0.0, 1.0);',
+'  float body = bodyBase * bodyBase * uGlow * sweep;',
+'  float sharp = max(uLineSharpness, 0.1);',
+'  float split = uColorSpread * 0.16;',
+'  float fr = clamp(scanBand(lc + split, aa, sharp) * sweep + body, 0.0, 1.0);',
+'  float fg = clamp(scanBand(lc, aa, sharp) * sweep + body, 0.0, 1.0);',
+'  float fb = clamp(scanBand(lc - split, aa, sharp) * sweep + body, 0.0, 1.0);',
+'  vec3 col = vec3(palette(fr).r, palette(fg).g, palette(fb).b);',
+'  float inten = (fr + fg + fb) * 0.3333333 * uBrightness;',
+'  inten *= 1.0 + mouseBoost * 0.9;',
+'  if (uScanline > 0.5) { inten *= 1.0 - 0.18 * (0.5 + 0.5 * cos(gl_FragCoord.y * 1.7)); }',
+'  if (uGrain > 0.5) {',
+'    float g = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233)) + iTime) * 43758.5453);',
+'    inten += (g - 0.5) * uGrainIntensity;',
+'  }',
+'  inten *= clamp(1.0 - uVignette * smoothstep(0.55, 1.65, length(uv0)), 0.0, 1.0);',
+'  inten = clamp(inten, 0.0, 1.0);',
+'  float a = clamp(inten * uOpacity, 0.0, 1.0);',
+'  fragColor = vec4(clamp(col, 0.0, 1.0) * a, a);',
+'}'
+].join('\n');
+
+    var canvas = document.createElement('canvas');
+    var gl = canvas.getContext('webgl2', { alpha:true, premultipliedAlpha:true, antialias:false });
+    if (!gl) return;   // no WebGL2 → the dark base alone still reads fine
+    container.appendChild(canvas);
+
+    function compile(type, src){
+      var sh = gl.createShader(type);
+      gl.shaderSource(sh, src); gl.compileShader(sh);
+      if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+        console.warn('Scanner shader:', gl.getShaderInfoLog(sh)); return null;
+      }
+      return sh;
+    }
+    var vs = compile(gl.VERTEX_SHADER, VERT), fs = compile(gl.FRAGMENT_SHADER, FRAG);
+    if (!vs || !fs) { container.removeChild(canvas); return; }
+    var prog = gl.createProgram();
+    gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { container.removeChild(canvas); return; }
+    gl.useProgram(prog);
+
+    var vao = gl.createVertexArray();
+    gl.bindVertexArray(vao);
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(prog, 'position');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+    var U = {};
+    ['iResolution','iTime','uSpeed','uSweepSpeed','uSweepWidth','uSweepFalloff','uScale','uFrequency',
+     'uRipple','uBandDensity','uLineSharpness','uGlow','uColorSpread','uBrightness','uContrast',
+     'uSoftness','uVignette','uOpacity','uScanline','uGrain','uGrainIntensity','uDirection','uScroll',
+     'uMouse','uMouseEnabled','uMouseRadius','uMouseStrength','uMouseActive',
+     'uColor1','uColor2','uColor3'].forEach(function(n){ U[n] = gl.getUniformLocation(prog, n); });
+
+    gl.uniform1f(U.uSpeed, OPTS.speed);
+    gl.uniform1f(U.uSweepSpeed, OPTS.sweepSpeed);
+    gl.uniform1f(U.uSweepWidth, OPTS.sweepWidth);
+    gl.uniform1f(U.uSweepFalloff, OPTS.sweepFalloff);
+    gl.uniform1f(U.uScale, OPTS.scale);
+    gl.uniform1f(U.uFrequency, OPTS.frequency);
+    gl.uniform1f(U.uRipple, OPTS.ripple);
+    gl.uniform1f(U.uBandDensity, OPTS.bandDensity);
+    gl.uniform1f(U.uLineSharpness, OPTS.lineSharpness);
+    gl.uniform1f(U.uGlow, OPTS.glow);
+    gl.uniform1f(U.uColorSpread, OPTS.colorSpread);
+    gl.uniform1f(U.uBrightness, OPTS.brightness);
+    gl.uniform1f(U.uContrast, OPTS.contrast);
+    gl.uniform1f(U.uSoftness, OPTS.softness);
+    gl.uniform1f(U.uVignette, OPTS.vignette);
+    gl.uniform1f(U.uOpacity, OPTS.opacity);
+    gl.uniform1f(U.uScanline, OPTS.scanline ? 1 : 0);
+    gl.uniform1f(U.uGrain, OPTS.grain ? 1 : 0);
+    gl.uniform1f(U.uGrainIntensity, OPTS.grainIntensity);
+    gl.uniform1f(U.uDirection, dirToFloat(OPTS.scanDirection));
+    gl.uniform1f(U.uMouseEnabled, OPTS.mouseInteraction ? 1 : 0);
+    gl.uniform1f(U.uMouseRadius, OPTS.mouseRadius);
+    gl.uniform1f(U.uMouseStrength, OPTS.mouseStrength);
+    gl.uniform3fv(U.uColor1, hexToRgb(OPTS.color1));
+    gl.uniform3fv(U.uColor2, hexToRgb(OPTS.color2));
+    gl.uniform3fv(U.uColor3, hexToRgb(OPTS.color3));
+
+    gl.clearColor(0,0,0,0);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);   // premultiplied alpha
+
+    function draw(){
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+    function setSize(){
+      var r = container.getBoundingClientRect();
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width  = Math.max(1, Math.floor(r.width  * dpr));
+      canvas.height = Math.max(1, Math.floor(r.height * dpr));
+      gl.uniform2f(U.iResolution, canvas.width, canvas.height);
+      draw();
+    }
+    new ResizeObserver(setSize).observe(container); setSize();
+
+    /* pointer focus */
+    var cur = [0.5, 0.5], tgt = [0.5, 0.5], act = 0, tgtAct = 0;
+    window.addEventListener('mousemove', function(e){
+      tgt = [e.clientX / window.innerWidth, 1 - e.clientY / window.innerHeight];
+      tgtAct = 1;
+    }, { passive:true });
+    document.addEventListener('mouseleave', function(){ tgtAct = 0; });
+
+    /* the field pans with the page — one fixed canvas, no tiling, no seams */
+    var scrollU = 0, scrollTarget = 0;
+    function readScroll(){ scrollTarget = -(window.scrollY / Math.max(window.innerHeight, 1)) * 2.0; }
+    readScroll();
+    scrollU = scrollTarget;
+    window.addEventListener('scroll', readScroll, { passive:true });
+    window.addEventListener('resize', readScroll);
+
+    /* reduced motion → one static frame, no loop */
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      gl.uniform1f(U.iTime, 12.0);
+      var paint = function(){ gl.uniform1f(U.uScroll, scrollTarget); draw(); };
+      paint();
+      window.addEventListener('scroll', paint, { passive:true });
+      return;
+    }
+
+    var raf = 0, onScreen = true, pageOn = !document.hidden, t0 = performance.now();
+    function loop(t){
+      gl.uniform1f(U.iTime, (t - t0) * 0.001);
+      cur[0] += 0.05 * (tgt[0] - cur[0]);
+      cur[1] += 0.05 * (tgt[1] - cur[1]);
+      gl.uniform2f(U.uMouse, cur[0], cur[1]);
+      act += 0.05 * (tgtAct - act);
+      gl.uniform1f(U.uMouseActive, act);
+      scrollU += 0.12 * (scrollTarget - scrollU);
+      gl.uniform1f(U.uScroll, scrollU);
+      draw();
+      raf = requestAnimationFrame(loop);
+    }
+    function start(){ if (onScreen && pageOn && !raf) raf = requestAnimationFrame(loop); }
+    function stop(){ if (raf) { cancelAnimationFrame(raf); raf = 0; } }
+    new IntersectionObserver(function(e){ onScreen = e[0].isIntersecting; onScreen ? start() : stop(); },
+      { threshold:0 }).observe(container);
+    document.addEventListener('visibilitychange', function(){
+      pageOn = !document.hidden; pageOn ? start() : stop();
+    });
+    start();
+  })();
+
+  /* ---------- pinned nav: scroll spy + progress ---------- */
+  (function(){
+    var bar   = document.querySelector('.topbar');
+    var links = Array.prototype.slice.call(document.querySelectorAll('.navlinks a'));
+    var prog  = document.getElementById('progress');
+    var targets = links.map(function(a){
+      return { link:a, el:document.querySelector(a.getAttribute('href')) };
+    }).filter(function(t){ return t.el; });
+    if (!targets.length) return;
+
+    var ticking = false;
+    function update(){
+      ticking = false;
+      var y = window.scrollY || 0;
+      bar.classList.toggle('stuck', y > 8);
+      var max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      prog.style.width = Math.min(100, (y / max) * 100) + '%';
+      var line = y + bar.offsetHeight + 90, current = targets[0];
+      targets.forEach(function(t){ if (t.el.offsetTop <= line) current = t; });
+      if (current.link === lastLink) return;
+      lastLink = current.link;
+      links.forEach(function(a){ a.classList.remove('active'); a.removeAttribute('aria-current'); });
+      current.link.classList.add('active');
+      current.link.setAttribute('aria-current','true');
+      // on phones the links scroll sideways: keep the active one in view
+      if (nav.scrollWidth > nav.clientWidth) {
+        nav.scrollTo({ left: current.link.offsetLeft - (nav.clientWidth - current.link.offsetWidth) / 2, behavior:'smooth' });
+      }
+    }
+    var lastLink = null, nav = document.querySelector('.navlinks');
+    function onScroll(){ if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+    window.addEventListener('scroll', onScroll, { passive:true });
+    window.addEventListener('resize', onScroll);
+    update();
+  })();
+})();
+</script>
+</body>
+</html>
