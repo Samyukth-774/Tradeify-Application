@@ -1378,7 +1378,8 @@ dialog.zoom::backdrop{background:rgba(0,0,0,.88);}
       var max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       prog.style.width = Math.min(100, (y / max) * 100) + '%';
       var line = y + bar.offsetHeight + 90, current = targets[0];
-      targets.forEach(function(t){ if (t.el.offsetTop <= line) current = t; });
+      // page position, not offsetTop: sections sit inside .wrap (position:relative), so offsetTop skips the hero
+      targets.forEach(function(t){ if (t.el.getBoundingClientRect().top + y <= line) current = t; });
       if (current.link === lastLink) return;
       lastLink = current.link;
       links.forEach(function(a){ a.classList.remove('active'); a.removeAttribute('aria-current'); });
